@@ -1,4 +1,3 @@
-#from flask import Flask
 from SSIS_Web import create_app
 
 app = create_app()
