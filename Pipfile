@@ -4,7 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-python = "*"
+flask-mysql = "*"
+flask-mysql-connector = "*"
+flask-bootstrap = "*"
+flask-wtf = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
