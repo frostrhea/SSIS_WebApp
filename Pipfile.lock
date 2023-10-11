@@ -71,13 +71,13 @@
             "index": "pypi",
             "version": "==1.5.2"
         },
-        "flask-mysql-connector": {
-            "hashes": [
-                "sha256:a891fe880ce2140102ffd47d631c8b3b87d04a73987ba5e6683c6cdcad2a5f86",
-                "sha256:ad3c3da148872034d998c12e1d1df3627c86b09322d332219e5769ddc704ab1b"
-            ],
-            "index": "pypi",
-            "version": "==1.1.0"
+            "flask-mysql-connector": {
+                "hashes": [
+                    "sha256:a891fe880ce2140102ffd47d631c8b3b87d04a73987ba5e6683c6cdcad2a5f86",
+                    "sha256:ad3c3da148872034d998c12e1d1df3627c86b09322d332219e5769ddc704ab1b"
+                ],
+                "index": "pypi",
+                "version": "==1.1.0"
         },
         "flask-wtf": {
             "hashes": [
