@@ -1,1 +1,56 @@
-{% extends "base.html" %} {% block title %} Student List {% endblock %}
+{% extends "base.html" %} {% block title %} Student List {% endblock %} {%block
+header %} Student List {% endblock %} {% block content %}
+<div class="container mt-5">
+  <!-- Bootstrap-styled table -->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Course</th>
+        <th scope="col">Year</th>
+        <th scope="col">Gender</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in data %}
+      <tr>
+        <th scope="row">{{ student.id }}</th>
+        <td>{{ student.firstname }}</td>
+        <td>{{ student.lastname }}</td>
+        <td>{{ student.course }}</td>
+        <td>{{ student.year }}</td>
+        <td>{{ student.gender}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Bootstrap-styled button -->
+<button id="fetch-data-button" class="btn btn-primary">Fetch Data</button>
+<div id="data-container"></div>
+{% endblock %} {% block scripts %}
+<script>
+  $(document).ready(function () {
+    $("#fetch-data-button").click(function () {
+      $.ajax({
+        url: "/students",
+        type: "GET",
+        dataType: "json",
+        headers: {
+          Accept: "application/json",
+        },
+        success: function (response) {
+          // Display the fetched data in the data-container div
+          $("#data-container").html(JSON.stringify(response));
+        },
+        error: function (error) {
+          console.log("Error:", error);
+        },
+      });
+    });
+  });
+</script>
+{% endblock %}
