@@ -21,26 +21,13 @@ def create_app(test_config=None):
     mysql.init_app(app)
     CSRFProtect(app)
     
-    from .views import views
-    
-    app.register_blueprint(views, url_prefix='/')
-    
-    
-    #from .user import user_bp as user_blueprint
-    #app.register_blueprint(user_blueprint)
-    
-#def create_app():
-#    app = Flask(__name__)
-#    app.config['SECRET_KEY'] = 'frost'
-    
-#    from .views import views
-    #from .auth import auth
-    
-#     app.register_blueprint(views, url_prefix='/')
-    #app.register_blueprint(auth, url_prefix='/')
-    
-    #@app.route('/')
-    #def home():
-     #           return "ssis test!"
+    from .views.student_controller import student_bp as student_blueprint
+    app.register_blueprint(student_blueprint)
+
+    from .views.course_controller import course_bp as course_blueprint
+    app.register_blueprint(course_blueprint)
+
+    from .views.college_controller import college_bp as college_blueprint
+    app.register_blueprint(college_blueprint)
     
     return app
