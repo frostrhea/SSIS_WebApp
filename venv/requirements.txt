@@ -1,5 +1,0 @@
-Flask==2.1.1             # Web framework for building the application
-Flask-MySQLdb==0.3.2     # MySQL database support for Flask
-Flask-WTF==0.15.1        # Forms handling in Flask
-WTForms==2.3.3           # Form library for Flaskk
-#sample langs
