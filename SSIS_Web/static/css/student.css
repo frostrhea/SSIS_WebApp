@@ -1,0 +1,29 @@
+.table th, .table td {
+    text-align: center; 
+    vertical-align: middle; 
+    padding: 0.25rem;
+}
+
+.button {
+    vertical-align: middle;
+    outline: none !important;
+  }
+.icon {
+    width: 16px;
+    height: auto;
+    background-color: none;
+    text-align: center;
+  }
+
+.search-icon {
+    width: 24px;
+    height: auto;
+    background-color: none;
+    text-align: center;
+  }
+
+.custom-search-input {
+  width: 200px; 
+  float: right;
+  margin-right: 0px; 
+}

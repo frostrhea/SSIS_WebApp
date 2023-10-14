@@ -1,8 +1,39 @@
-{% extends "base.html" %} {% block title %} Student List {% endblock %} {%block
+{% extends "base.html" %} {% block title %} Student List {% endblock %} {% block
 header %} Student List {% endblock %} {% block content %}
-<div class="container mt-5">
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/student.css') }}"
+/>
+
+<div class="container mt-2">
+  <!-- Search bar and Add button row -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <!-- Button to trigger the modal -->
+      <button type="button" class="btn btn-primary" id="addStudentButton">
+        Add Student
+      </button>
+    </div>
+    <div class="col-md-8">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control custom-search-input"
+          id="searchInput"
+          placeholder="Search"
+        />
+        <div class="input-group-append">
+          <button type="button" class="btn btn-outline-info" id="searchButton">
+            <img src="/static/assets/search.png" alt="Search" class="icon" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap-styled table -->
   <table class="table table-striped">
+    <!-- Table header -->
     <thead>
       <tr>
         <th scope="col">ID</th>
@@ -11,46 +42,176 @@ header %} Student List {% endblock %} {% block content %}
         <th scope="col">Course</th>
         <th scope="col">Year</th>
         <th scope="col">Gender</th>
+        <th scope="col">Actions</th>
       </tr>
     </thead>
     <tbody>
-      {% for student in data %}
+      <!-- Table rows for student data -->
+      {% for student in student_data %}
       <tr>
+        <!-- Data for each column -->
         <th scope="row">{{ student.id }}</th>
         <td>{{ student.firstname }}</td>
         <td>{{ student.lastname }}</td>
         <td>{{ student.course }}</td>
         <td>{{ student.year }}</td>
-        <td>{{ student.gender}}</td>
+        <td>{{ student.gender }}</td>
+        <td>
+          <!-- Edit button -->
+          <button
+            class="btn btn-outline-info btn-sm edit-button"
+            data-student-id="{{ student.id }}"
+          >
+            <img src="/static/assets/edit.png" alt="Edit" class="icon" /> Edit
+          </button>
+
+          <!-- Delete button -->
+          <button
+            class="btn btn-outline-danger btn-sm delete-button"
+            data-student-id="{{ student.id }}"
+          >
+            <img src="/static/assets/delete.png" alt="Delete" class="icon" />
+            Delete
+          </button>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
 
-<!-- Bootstrap-styled button -->
-<button id="fetch-data-button" class="btn btn-primary">Fetch Data</button>
-<div id="data-container"></div>
-{% endblock %} {% block scripts %}
+<!-- Add Student Modal -->
+<div
+  class="modal fade"
+  id="addStudentModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addStudentModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addStudentModalLabel">Add New Student</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Form to add a new student -->
+        <form id="addStudentForm" action="/students/add" method="POST">
+          <!-- Input fields for student information -->
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstName"
+              name="firstName"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastName"
+              name="lastName"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="course">Course</label>
+            <input
+              type="text"
+              class="form-control"
+              id="course"
+              name="course"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="year">Year</label>
+            <input
+              type="number"
+              class="form-control"
+              id="year"
+              name="year"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select class="form-control" id="gender" name="gender" required>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+
+          <!-- Hidden input fields to store form data -->
+          <input type="hidden" id="hiddenFirstName" name="hiddenFirstName" />
+          <input type="hidden" id="hiddenLastName" name="hiddenLastName" />
+          <input type="hidden" id="hiddenCourse" name="hiddenCourse" />
+          <input type="hidden" id="hiddenYear" name="hiddenYear" />
+          <input type="hidden" id="hiddenGender" name="hiddenGender" />
+
+          <!-- CSRF Token -->
+          {{ form.hidden_tag() }}
+
+          <!-- Modal footer with submit button -->
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Add Student</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
   $(document).ready(function () {
-    $("#fetch-data-button").click(function () {
-      $.ajax({
-        url: "/students",
-        type: "GET",
-        dataType: "json",
-        headers: {
-          Accept: "application/json",
-        },
-        success: function (response) {
-          // Display the fetched data in the data-container div
-          $("#data-container").html(JSON.stringify(response));
-        },
-        error: function (error) {
-          console.log("Error:", error);
-        },
-      });
+    // Add Student button click handler to show the add student modal
+    $("#addStudentButton").click(function () {
+      // Clear input fields and hidden fields when the modal is opened
+      $("#addStudentForm")[0].reset();
+      $("#hiddenFirstName").val("");
+      $("#hiddenLastName").val("");
+      $("#hiddenCourse").val("");
+      $("#hiddenYear").val("");
+      $("#hiddenGender").val("");
+      // Show the modal
+      $("#addStudentModal").modal("show");
+    });
+
+    // Add student form submit handler
+    $("#submitButton").click(function () {
+      // Update hidden input fields with form data
+      $("#hiddenFirstName").val($("#firstName").val());
+      $("#hiddenLastName").val($("#lastName").val());
+      $("#hiddenCourse").val($("#course").val());
+      $("#hiddenYear").val($("#year").val());
+      $("#hiddenGender").val($("#gender").val());
+
+      // Submit the form
+      $("#addStudentForm").submit();
     });
   });
 </script>
+
 {% endblock %}
