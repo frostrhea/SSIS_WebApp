@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, jsonify, request, redirect, url_for, abort
-from SSIS_Web.models.student_model import StudentManager
+from SSIS_Web.student.student_model import StudentManager
 from flask_mysql_connector import MySQL
-from SSIS_Web.views.forms import StudentForm
+from SSIS_Web.student.forms import StudentForm
 
 mysql = MySQL()
 student_bp = Blueprint('student', __name__)

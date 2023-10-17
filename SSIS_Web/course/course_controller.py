@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from SSIS_Web.models.course_model import get_course_data
+from SSIS_Web.course.course_model import get_course_data
 
 course_bp = Blueprint('course', __name__)
 
