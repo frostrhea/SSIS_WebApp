@@ -33,7 +33,14 @@ def add_student():
             return redirect(url_for('student.list_students'))
         except Exception as e:
             print(f"Error adding student: {e}")
-            return render_template('error.html', error_message='Error adding student')
 
     # Pass the form instance to the template context
     return render_template('add_student.html', form=form)
+
+@student_bp.route('/students/delete/<string:student_id>', methods=['POST'])
+def delete_student(student_id):
+    try:
+        student.deleteStudent(student_id)
+        return redirect(url_for('student.list_students'))
+    except Exception as e:
+        print(f"Error deleting student: {e}")
