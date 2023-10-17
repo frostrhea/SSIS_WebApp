@@ -1,19 +1,17 @@
-from flask import Blueprint, render_template, jsonify, request, redirect, url_for, abort
+from flask import Blueprint, render_template, request, redirect, url_for
 from SSIS_Web.student.student_model import StudentManager
 from flask_mysql_connector import MySQL
 from SSIS_Web.student.forms import StudentForm
 
 mysql = MySQL()
 student_bp = Blueprint('student', __name__)
-student = StudentManager(mysql)
-
-
+StudentManager.init_db(mysql)  # Initialize the database connection
 
 @student_bp.route('/students', methods=['GET'])
 def list_students():
     form = StudentForm()
-    students = student.get_student_data()  # Fetch data from the database
-    return render_template('student.html', student_data=students, form = form)
+    students = StudentManager.get_student_data()  # Fetch data from the database
+    return render_template('student.html', student_data=students, form=form)
 
 @student_bp.route('/students/add', methods=['GET', 'POST'])
 def add_student():
@@ -28,8 +26,8 @@ def add_student():
         gender = request.form.get('gender')
 
         try:
-            # Call the addStudent method from the StudentManager class
-            student.addStudent(student_id, first_name, last_name, course, gender, year)
+            # Call the add_student class method from the StudentManager class
+            StudentManager.add_student(student_id, first_name, last_name, course, gender, year)
             return redirect(url_for('student.list_students'))
         except Exception as e:
             print(f"Error adding student: {e}")
@@ -40,7 +38,7 @@ def add_student():
 @student_bp.route('/students/delete/<string:student_id>', methods=['POST'])
 def delete_student(student_id):
     try:
-        student.deleteStudent(student_id)
+        StudentManager.delete_student(student_id)
         return redirect(url_for('student.list_students'))
     except Exception as e:
         print(f"Error deleting student: {e}")
