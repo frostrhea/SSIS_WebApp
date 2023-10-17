@@ -107,6 +107,16 @@ header %} Student List {% endblock %} {% block content %}
         <form id="addStudentForm" action="/students/add" method="POST">
           <!-- Input fields for student information -->
           <div class="form-group">
+            <label for="studentID">ID Number</label>
+            <input
+              type="text"
+              class="form-control"
+              id="studentID"
+              name="studentID"
+              required
+            />
+          </div>
+          <div class="form-group">
             <label for="firstName">First Name</label>
             <input
               type="text"
@@ -155,6 +165,7 @@ header %} Student List {% endblock %} {% block content %}
           </div>
 
           <!-- Hidden input fields to store form data -->
+          <input type="hidden" id="hiddenIDNumber" name="hiddenFIDNumber" />
           <input type="hidden" id="hiddenFirstName" name="hiddenFirstName" />
           <input type="hidden" id="hiddenLastName" name="hiddenLastName" />
           <input type="hidden" id="hiddenCourse" name="hiddenCourse" />
@@ -190,6 +201,7 @@ header %} Student List {% endblock %} {% block content %}
     $("#addStudentButton").click(function () {
       // Clear input fields and hidden fields when the modal is opened
       $("#addStudentForm")[0].reset();
+      $("#hiddenIDNumber").val("");
       $("#hiddenFirstName").val("");
       $("#hiddenLastName").val("");
       $("#hiddenCourse").val("");
@@ -200,16 +212,14 @@ header %} Student List {% endblock %} {% block content %}
     });
 
     // Add student form submit handler
-    $("#submitButton").click(function () {
+    $("#addStudentForm").submit(function (event) {
       // Update hidden input fields with form data
+      $("#hiddenIDNumber").val($("#idnumber").val());
       $("#hiddenFirstName").val($("#firstName").val());
       $("#hiddenLastName").val($("#lastName").val());
       $("#hiddenCourse").val($("#course").val());
       $("#hiddenYear").val($("#year").val());
       $("#hiddenGender").val($("#gender").val());
-
-      // Submit the form
-      $("#addStudentForm").submit();
     });
   });
 </script>
