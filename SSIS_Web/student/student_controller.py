@@ -5,13 +5,26 @@ from SSIS_Web.student.forms import StudentForm
 
 mysql = MySQL()
 student_bp = Blueprint('student', __name__)
-StudentManager.init_db(mysql)  # Initialize the database connection
+StudentManager.init_db(mysql)  
 
-@student_bp.route('/students', methods=['GET'])
+
+
+@student_bp.route('/students', methods=['GET', 'POST'])
 def list_students():
     form = StudentForm()
-    students = StudentManager.get_student_data()  # Fetch data from the database
-    return render_template('student.html', student_data=students, form=form)
+
+    if request.method == 'POST':
+        search_field = request.form.get('searchField')  
+        search_query = request.form.get('searchInput')  
+
+        # Perform search based on user input
+        student_data = StudentManager.search_students(field=search_field, query=search_query)
+    else:
+        # If no search input, retrieve all students
+        student_data = StudentManager.get_student_data()
+
+    return render_template('student.html', student_data=student_data, form=form)
+
 
 @student_bp.route('/students/add', methods=['GET', 'POST'])
 def add_student():
@@ -31,8 +44,6 @@ def add_student():
             return redirect(url_for('student.list_students'))
         except Exception as e:
             print(f"Error adding student: {e}")
-
-    # Pass the form instance to the template context
     return render_template('add_student.html', form=form)
 
 @student_bp.route('/students/delete/<string:student_id>', methods=['POST'])

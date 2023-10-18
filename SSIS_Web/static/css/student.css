@@ -13,11 +13,19 @@
     vertical-align: middle;
     outline: none !important;
   }
+
 .icon {
     width: 16px;
     height: auto;
     background-color: none;
     text-align: center;
+  }
+
+
+#searchLayout {
+    display: flex;
+    justify-content: flex-end; 
+    width: 100%;
   }
 
 .search-icon {
@@ -27,11 +35,27 @@
     text-align: center;
   }
 
-.custom-search-input {
-  width: 200px; 
 
+.input-group {
+  width: 1500px;
+  margin-left: 5px;
+}
+
+.field-selection {
+  display: flex;
+  align-items: center;
+  width: 600px;
+
+}
+
+.search-selector{
+  background-color: ghostwhite;
+}
+
+.custom-search-input {
+
+  margin-right: 0px;
   float: right;
-  margin-right: 0px; 
 }
 
 .btn-group {

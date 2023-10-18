@@ -15,17 +15,36 @@ header %} Student List {% endblock %} {% block content %}
       </button>
     </div>
     <div class="col-md-8">
-      <div class="input-group">
-        <input
-          type="text"
-          class="form-control custom-search-input"
-          id="searchInput"
-          placeholder="Search"
-        />
-        <div class="input-group-append">
-          <button type="button" class="btn btn-outline-info" id="searchButton">
-            <img src="/static/assets/search.png" alt="Search" class="icon" />
-          </button>
+      <!-- Dropdown menu for selecting search field and input field for search query -->
+      <div class="field-selection">
+        <!-- Dropdown menu for selecting search field -->
+        <select class="form-control search-selector" id="searchField">
+          <option value="all">All columns</option>
+          <option value="id">ID</option>
+          <option value="firstname">First name</option>
+          <option value="lastname">Last name</option>
+          <option value="course">Course</option>
+          <option value="year">Year</option>
+          <option value="gender">Gender</option>
+        </select>
+
+        <!-- Input field for search query -->
+        <div class="input-group custom-search-input">
+          <input
+            type="text"
+            class="form-control custom-search-input"
+            id="searchInput"
+            placeholder="Search"
+          />
+          <div class="input-group-append">
+            <button
+              type="button"
+              class="btn btn-outline-info"
+              id="searchButton"
+            >
+              <img src="/static/assets/search.png" alt="Search" class="icon" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -51,12 +70,12 @@ header %} Student List {% endblock %} {% block content %}
         {% for student in student_data %}
         <tr>
           <!-- Data for each column -->
-          <th scope="row">{{ student.id }}</th>
-          <td>{{ student.firstname }}</td>
-          <td>{{ student.lastname }}</td>
-          <td>{{ student.course }}</td>
-          <td>{{ student.year }}</td>
-          <td>{{ student.gender }}</td>
+          <th scope="row" class="id">{{ student.id }}</th>
+          <td class="firstname">{{ student.firstname }}</td>
+          <td class="lastname">{{ student.lastname }}</td>
+          <td class="course">{{ student.course }}</td>
+          <td class="year">{{ student.year }}</td>
+          <td class="gender">{{ student.gender }}</td>
           <td>
             <div class="btn-group" role="group">
               <!-- Edit button -->
@@ -248,6 +267,37 @@ header %} Student List {% endblock %} {% block content %}
         var studentId = $(this).data("student-id");
       }
     });
+
+    $("#searchButton").click(function () {
+      event.stopPropagation();
+      var searchField = $("#searchField").val();
+      var searchQuery = $("#searchInput").val();
+
+      console.log("Search Field:", searchField);
+      console.log("Search Query:", searchQuery);
+
+      // Iterate through each table row and filter based on search criteria
+      $(".table-striped tbody tr").each(function () {
+        var rowData = $(this)
+          .find("." + searchField)
+          .text()
+          .toLowerCase();
+
+        if (searchField === "all") {
+          rowData = $(this).text().toLowerCase();
+        }
+        // Show/hide rows based on search query
+        if (rowData.includes(searchQuery)) {
+          $(this).show();
+        } else {
+          $(this).hide();
+        }
+      });
+    });
+  });
+  //-----
+  $("#resetButton").click(function () {
+    $(".table-striped tbody tr").show();
   });
 </script>
 

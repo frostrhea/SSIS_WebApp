@@ -56,3 +56,24 @@ class StudentManager:
         except Exception as e:
             print(f"Error deleting student: {e}")
             return False
+    
+    @classmethod
+    def search_students(cls, field=None, query=None):
+        try:
+            cur = cls.mysql.connection.cursor(dictionary=True)
+
+            if field != 'all':
+                # Search by specific field
+                cur.execute(f"SELECT * FROM student_info WHERE `{field}` LIKE %s", (f"%{query}%",))
+            else:
+                # Search by all columns
+                cur.execute("SELECT * FROM student_info WHERE id LIKE %s OR firstname LIKE %s OR lastname LIKE %s OR course LIKE %s OR year LIKE %s OR gender LIKE %s",
+                            (f"%{query}%", f"%{query}%", f"%{query}%", f"%{query}%", f"%{query}%", f"%{query}%"))
+
+            student_data = cur.fetchall()
+            cur.close()
+            return student_data
+
+        except Exception as e:
+            print(f"Error searching students: {e}")
+            return None
