@@ -12,11 +12,9 @@ StudentManager.init_db(mysql)
 @student_bp.route('/students', methods=['GET', 'POST'])
 def list_students():
     form = StudentForm()
-
     if request.method == 'POST':
         search_field = request.form.get('searchField')  
         search_query = request.form.get('searchInput')  
-
         # Perform search based on user input
         student_data = StudentManager.search_students(field=search_field, query=search_query)
     else:
@@ -39,12 +37,11 @@ def add_student():
         gender = request.form.get('gender')
 
         try:
-            # Call the add_student class method from the StudentManager class
             StudentManager.add_student(student_id, first_name, last_name, course, gender, year)
             return redirect(url_for('student.list_students'))
         except Exception as e:
             print(f"Error adding student: {e}")
-    return render_template('add_student.html', form=form)
+    return render_template('student.html', form=form)
 
 @student_bp.route('/students/delete/<string:student_id>', methods=['POST'])
 def delete_student(student_id):
@@ -53,3 +50,27 @@ def delete_student(student_id):
         return redirect(url_for('student.list_students'))
     except Exception as e:
         print(f"Error deleting student: {e}")
+        
+@student_bp.route('/students/edit/<string:student_id>', methods=['GET'])
+def edit_student(student_id):
+    student = StudentManager.get_student_by_id(student_id)
+    return render_template('student.html', student=student, existing_id=student_id)  
+    
+@student_bp.route('/students/edit/', methods=['POST'])
+def edit_student_data():
+    form = StudentForm()
+    student_id = request.form.get('studentID')
+    updated_data = {
+        'new_id': request.form.get('studentID'),
+        'firstname': request.form.get('firstName'),
+        'lastname': request.form.get('lastName'),
+        'course': request.form.get('course'),
+        'year': request.form.get('year'),
+        'gender': request.form.get('gender'),
+        'old_id': student_id
+    }
+    StudentManager.update_student( **updated_data) 
+    return redirect(url_for('student.list_students'))
+
+# something wrong with new and old id, must find a way to use old id and new id
+

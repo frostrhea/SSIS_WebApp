@@ -81,12 +81,19 @@ header %} Student List {% endblock %} {% block content %}
               <!-- Edit button -->
               <button
                 class="btn btn-outline-info btn-sm edit-button"
+                data-toggle="modal"
+                data-target="#editStudentModal"
                 data-student-id="{{ student.id }}"
+                data-firstname="{{ student.firstname }}"
+                data-lastname="{{ student.lastname }}"
+                data-course="{{ student.course }}"
+                data-year="{{ student.year }}"
+                data-gender="{{ student.gender }}"
               >
                 <img src="/static/assets/edit.png" alt="Edit" class="icon" />
                 Edit
               </button>
-
+              
               <!-- Delete button form -->
               <form
                 id="deleteStudentForm"
@@ -116,23 +123,22 @@ header %} Student List {% endblock %} {% block content %}
   </div>
 </div>
 
-<!-- Add Student Modal -->
-<div
-  class="modal fade"
-  id="addStudentModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="addStudentModalLabel"
-  aria-hidden="true"
->
+<!-- EDIT Student Modal -->
+<div class="modal fade" id="editStudentModal" tabindex="-1" role="dialog" aria-labelledby="editStudentModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addStudentModalLabel">Add New Student</h5>
+      <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>
       </div>
       <div class="modal-body">
-        <!-- Form to add a new student -->
-        <form id="addStudentForm" action="/students/add" method="POST">
+        <!-- Form to edit an existing student -->
+        <form
+          action="/students/edit/"
+          method="POST"
+          class="editStudentForm"
+          id="editStudentForm"
+        >
+        
           <!-- Input fields for student information -->
           <div class="form-group">
             <label for="studentID">ID Number</label>
@@ -141,6 +147,8 @@ header %} Student List {% endblock %} {% block content %}
               class="form-control"
               id="studentID"
               name="studentID"
+              value="{{ existing_id  }}"
+              
               required
             />
           </div>
@@ -151,6 +159,7 @@ header %} Student List {% endblock %} {% block content %}
               class="form-control"
               id="firstName"
               name="firstName"
+              data-student-id=""
               required
             />
           </div>
@@ -161,6 +170,7 @@ header %} Student List {% endblock %} {% block content %}
               class="form-control"
               id="lastName"
               name="lastName"
+              data-student-id=""
               required
             />
           </div>
@@ -171,6 +181,7 @@ header %} Student List {% endblock %} {% block content %}
               class="form-control"
               id="course"
               name="course"
+              data-student-id=""
               required
             />
           </div>
@@ -181,6 +192,7 @@ header %} Student List {% endblock %} {% block content %}
               class="form-control"
               id="year"
               name="year"
+              data-student-id=""
               required
             />
           </div>
@@ -191,15 +203,7 @@ header %} Student List {% endblock %} {% block content %}
               <option value="Female">Female</option>
             </select>
           </div>
-
-          <!-- Hidden input fields to store form data -->
-          <input type="hidden" id="hiddenIDNumber" name="hiddenFIDNumber" />
-          <input type="hidden" id="hiddenFirstName" name="hiddenFirstName" />
-          <input type="hidden" id="hiddenLastName" name="hiddenLastName" />
-          <input type="hidden" id="hiddenCourse" name="hiddenCourse" />
-          <input type="hidden" id="hiddenYear" name="hiddenYear" />
-          <input type="hidden" id="hiddenGender" name="hiddenGender" />
-
+         
           <!-- CSRF Token -->
           {{ form.hidden_tag() }}
 
@@ -213,9 +217,140 @@ header %} Student List {% endblock %} {% block content %}
             >
               Close
             </button>
-            <button type="submit" class="btn btn-primary">Add Student</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
           </div>
+          
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+        
+    
+  <!-- Add Student Modal -->
+  <div
+    class="modal fade"
+    id="addStudentModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="addStudentModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addStudentModalLabel">
+            Add New Student
+          </h5>
+        </div>
+        <div class="modal-body">
+          <!-- Form to add a new student -->
+          <form id="addStudentForm" action="/students/add" method="POST">
+            <!-- Input fields for student information -->
+            <div class="form-group">
+              <label for="studentID">ID Number</label>
+              <input
+                type="text"
+                class="form-control"
+                id="studentID"
+                name="studentID"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="firstName"
+                name="firstName"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="lastName"
+                name="lastName"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="course">Course</label>
+              <input
+                type="text"
+                class="form-control"
+                id="course"
+                name="course"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="year">Year</label>
+              <input
+                type="number"
+                class="form-control"
+                id="year"
+                name="year"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <select
+                class="form-control"
+                id="gender"
+                name="gender"
+                required
+              >
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+
+            <!-- Hidden input fields to store form data -->
+            <input
+              type="hidden"
+              id="hiddenIDNumber"
+              name="hiddenFIDNumber"
+            />
+            <input
+              type="hidden"
+              id="hiddenFirstName"
+              name="hiddenFirstName"
+            />
+            <input
+              type="hidden"
+              id="hiddenLastName"
+              name="hiddenLastName"
+            />
+            <input type="hidden" id="hiddenCourse" name="hiddenCourse" />
+            <input type="hidden" id="hiddenYear" name="hiddenYear" />
+            <input type="hidden" id="hiddenGender" name="hiddenGender" />
+
+            <!-- CSRF Token -->
+            {{ form.hidden_tag() }}
+
+            <!-- Modal footer with submit button -->
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="closeModalButton"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Add Student
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -225,80 +360,112 @@ header %} Student List {% endblock %} {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  $(document).ready(function () {
-    // Add Student button click handler to show the add student modal
-    $("#addStudentButton").click(function () {
-      // Clear input fields and hidden fields when the modal is opened
-      $("#addStudentForm")[0].reset();
-      $("#hiddenIDNumber").val("");
-      $("#hiddenFirstName").val("");
-      $("#hiddenLastName").val("");
-      $("#hiddenCourse").val("");
-      $("#hiddenYear").val("");
-      $("#hiddenGender").val("");
+$(document).ready(function () {
+  // Add Student button click handler to show the add student modal
+  $("#addStudentButton").click(function () {
+    // Clear input fields and hidden fields when the modal is opened
+    $("#addStudentForm")[0].reset();
+    $("#hiddenIDNumber").val("");
+    $("#hiddenFirstName").val("");
+    $("#hiddenLastName").val("");
+    $("#hiddenCourse").val("");
+    $("#hiddenYear").val("");
+    $("#hiddenGender").val("");
 
-      $("#addStudentModal").modal("show");
-    });
+    $("#addStudentModal").modal("show");
+  });
 
-    // Add student form submit handler
-    $("#addStudentForm").submit(function (event) {
-      // Update hidden input fields with form data
-      $("#hiddenIDNumber").val($("#idnumber").val());
-      $("#hiddenFirstName").val($("#firstName").val());
-      $("#hiddenLastName").val($("#lastName").val());
-      $("#hiddenCourse").val($("#course").val());
-      $("#hiddenYear").val($("#year").val());
-      $("#hiddenGender").val($("#gender").val());
-    });
+  // Add student form submit handler
+  $("#addStudentForm").submit(function (event) {
+    // Update hidden input fields with form data
+    $("#hiddenIDNumber").val($("#idnumber").val());
+    $("#hiddenFirstName").val($("#firstName").val());
+    $("#hiddenLastName").val($("#lastName").val());
+    $("#hiddenCourse").val($("#course").val());
+    $("#hiddenYear").val($("#year").val());
+    $("#hiddenGender").val($("#gender").val());
+  });
 
-    // Close modal function
-    function closeModal() {
-      $("#addStudentModal").modal("hide");
+  // Close modal function
+  function closeModal() {
+    $("#addStudentModal").modal("hide");
+  }
+
+  $("#closeModalButton").click(function () {
+    closeModal();
+  });
+
+  $("#deleteStudentFromList").click(function (event) {
+    if (!confirm("Are you sure you want to delete this student?")) {
+      event.preventDefault();
+    } else {
+      var studentId = $(this).data("student-id");
     }
+  });
 
-    $("#closeModalButton").click(function () {
-      closeModal();
-    });
+  $("#searchButton").click(function () {
+    event.stopPropagation();
+    var searchField = $("#searchField").val();
+    var searchQuery = $("#searchInput").val();
 
-    $("#deleteStudentFromList").click(function (event) {
-      if (!confirm("Are you sure you want to delete this student?")) {
-        event.preventDefault(); // Prevent the default click action if the user cancels
+    // Iterate through each table row and filter based on search criteria
+    $(".table-striped tbody tr").each(function () {
+      var rowData = $(this)
+        .find("." + searchField)
+        .text()
+        .toLowerCase();
+
+      if (searchField === "all") {
+        rowData = $(this).text().toLowerCase();
+      }
+      // Show/hide rows based on search query
+      if (rowData.includes(searchQuery)) {
+        $(this).show();
       } else {
-        var studentId = $(this).data("student-id");
+        $(this).hide();
       }
     });
-
-    $("#searchButton").click(function () {
-      event.stopPropagation();
-      var searchField = $("#searchField").val();
-      var searchQuery = $("#searchInput").val();
-
-      console.log("Search Field:", searchField);
-      console.log("Search Query:", searchQuery);
-
-      // Iterate through each table row and filter based on search criteria
-      $(".table-striped tbody tr").each(function () {
-        var rowData = $(this)
-          .find("." + searchField)
-          .text()
-          .toLowerCase();
-
-        if (searchField === "all") {
-          rowData = $(this).text().toLowerCase();
-        }
-        // Show/hide rows based on search query
-        if (rowData.includes(searchQuery)) {
-          $(this).show();
-        } else {
-          $(this).hide();
-        }
-      });
-    });
   });
-  //-----
-  $("#resetButton").click(function () {
-    $(".table-striped tbody tr").show();
+
+  $(".edit-button").click(function () {
+    var studentId = $(this).data("student-id");
+    var firstname = $(this).data("firstname");
+    var lastname = $(this).data("lastname");
+    var course = $(this).data("course");
+    var year = $(this).data("year");
+    var gender = $(this).data("gender");
+
+    // Populate the form fields with the student data
+    $("#editStudentForm input[name='studentID']")
+      .val(studentId)
+      .data("student-id", studentId);
+    $("#editStudentForm input[name='firstName']")
+      .val(firstname)
+      .data("student-id", studentId);
+    $("#editStudentForm input[name='lastName']")
+      .val(lastname)
+      .data("student-id", studentId);
+    $("#editStudentForm input[name='course']")
+      .val(course)
+      .data("student-id", studentId);
+    $("#editStudentForm input[name='year']")
+      .val(year)
+      .data("student-id", studentId);
+    $("#editStudentForm select[name='gender']")
+      .val(gender)
+      .data("student-id", studentId);
+
+    // Show the form for editing
+    $("#editStudentModal").modal("show");
   });
+});
+
+//-----
+
+$("#resetButton").click(function () {
+  $(".table-striped tbody tr").show();
+});
 </script>
 
 {% endblock %}
+  

@@ -10,10 +10,6 @@ class StudentManager:
 
     @classmethod
     def get_student_data(cls):
-        if not cls.mysql.connection.is_connected():
-            print("Database connection is not established!")
-            return "Database connection is not established!"
-
         cur = cls.mysql.connection.cursor(dictionary=True)
         cur.execute("SELECT * FROM student_info")
         student_data = cur.fetchall()
@@ -77,3 +73,27 @@ class StudentManager:
         except Exception as e:
             print(f"Error searching students: {e}")
             return None
+
+    @classmethod
+    def update_student(cls, old_id, new_id, firstname, lastname, course, gender, year):
+        try:
+            cur = cls.mysql.connection.cursor()
+            print(old_id)
+            print(new_id)
+            cur.execute("UPDATE student_info SET `id`=%s,  `firstname` = %s, `lastname` = %s, `course` = %s, `gender` = %s, `year` = %s WHERE `id` = %s",
+                        (new_id, firstname, lastname, course, gender, year, old_id))
+            cls.mysql.connection.commit()
+            return True
+        except Exception as e:
+            print(f"Error updating student: {e}")
+        return False
+
+
+    @classmethod
+    def get_student_by_id(cls, student_id):
+            cur = cls.mysql.connection.cursor(dictionary=True)
+            cur.execute("SELECT * FROM student_info WHERE `id` = %s", (student_id,))
+            student = cur.fetchone()
+            print
+            cur.close()
+            return student
