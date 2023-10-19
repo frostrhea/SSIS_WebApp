@@ -25,7 +25,6 @@ def list_students():
 
     return render_template('student.html', student_data=student_data, form=form, courses=courses)
 
-#ISSUE: OTHER GENDER OPTIONS WONT ADD TO DB
 @student_bp.route('/students/add', methods=['GET', 'POST'])
 def add_student():
     form = StudentForm()
