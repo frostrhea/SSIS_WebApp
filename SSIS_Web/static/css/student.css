@@ -22,8 +22,18 @@
     text-align: center;
   }
 
+.header {
+    text-align: left;
+    padding-top: 0.1em;
+    padding-left: 0.1em;
+    margin-bottom: 0;
+    font-size: 70px;
+}
 
-
+#addStudentButton {
+  margin-top: auto;
+  float: right;
+}
 
 .search-icon {
     width: 24px;

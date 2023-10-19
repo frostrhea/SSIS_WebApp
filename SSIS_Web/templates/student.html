@@ -1,5 +1,4 @@
-{% extends "base.html" %} {% block title %} Student List {% endblock %} {% block
-header %} Student List. {% endblock %} {% block content %}
+{% extends "base.html" %} {% block title %} Student List {% endblock %}  {% block content %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/student.css') }}"
@@ -9,12 +8,16 @@ header %} Student List. {% endblock %} {% block content %}
   <!-- Search bar and Add button row -->
   <div class="row mb-3">
     <div class="col">
+      <h1 class="header" >Student List.</h1> 
+    </div>
+    <div class="col mt-auto">
       <!-- Button to trigger the modal -->
-      <button type="button" class="btn btn-outline-primary" id="addStudentButton">
+      <button type="button" class="btn btn-outline-info" id="addStudentButton">
+        <img src="/static/assets/add.png" alt="Add" class="icon" />
         Add Student
       </button>
     </div>
-    <div class="col order-md-last">
+    <div class="col order-md-last mt-auto">
       <!-- Dropdown menu for selecting search field and input field for search query -->
       <div class="field-selection">
         <!-- Dropdown menu for selecting search field -->
@@ -177,15 +180,20 @@ header %} Student List. {% endblock %} {% block content %}
           </div>
           <div class="form-group">
             <label for="course">Course</label>
-            <input
+            <select
               type="text"
               class="form-control"
               id="course"
               name="course"
               data-student-id=""
               required
-            />
+            >
+                {% for course in courses %}
+                  <option value="{{ course.code }}">{{ course.name }}</option>
+                {% endfor %} 
+            </select>
           </div>
+                
           <div class="form-group">
             <label for="year">Year</label>
             <input
@@ -200,8 +208,13 @@ header %} Student List. {% endblock %} {% block content %}
           <div class="form-group">
             <label for="gender">Gender</label>
             <select class="form-control" id="gender" name="gender" required>
+              <option value="" disabled selected>Select gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
+              <option value="Non-binary">Non-binary</option>
+              <option value="Transgender">Transgender</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+              <option value="Not listed">Not listed</option>
             </select>
           </div>
          
@@ -283,9 +296,13 @@ header %} Student List. {% endblock %} {% block content %}
             <div class="form-group">
               <label for="course">Course</label>
               <select class="form-control" id="course" name="course" required>
-                  <!-- Options will be dynamically added here -->
+                <option value="" disabled selected>Select a course</option>
+                  {% for course in courses %}
+                    <option value="{{ course.code }}">{{ course.name }}</option>
+                  {% endfor %}
               </select>
-          </div>
+            </div>
+          
             <div class="form-group">
               <label for="year">Year</label>
               <input
@@ -304,8 +321,13 @@ header %} Student List. {% endblock %} {% block content %}
                 name="gender"
                 required
               >
+              <option value="" disabled selected>Select gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
+                <option value="Non-binary">Non-binary</option>
+                <option value="Transgender">Transgender</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+                <option value="Not listed">Not listed</option>
               </select>
             </div>
 
@@ -358,30 +380,30 @@ header %} Student List. {% endblock %} {% block content %}
 
 <script>
 $(document).ready(function () {
-  // Add Student button click handler to show the add student modal
-  $("#addStudentButton").click(function () {
-    // Clear input fields and hidden fields when the modal is opened
-    $("#addStudentForm")[0].reset();
-    $("#hiddenIDNumber").val("");
-    $("#hiddenFirstName").val("");
-    $("#hiddenLastName").val("");
-    $("#hiddenCourse").val("");
-    $("#hiddenYear").val("");
-    $("#hiddenGender").val("");
+   $("#addStudentButton").click(function () {
+      // Clear input fields and hidden fields when the modal is opened
+      $("#addStudentForm")[0].reset();
+      $("#hiddenIDNumber").val("");
+      $("#hiddenFirstName").val("");
+      $("#hiddenLastName").val("");
+      $("#hiddenCourse").val("");
+      $("#hiddenYear").val("");
+      $("#hiddenGender").val("");
+      
+      $("#addStudentModal").modal("show");
+    });
 
-    $("#addStudentModal").modal("show");
-  });
-
-  // Add student form submit handler
-  $("#addStudentForm").submit(function (event) {
-    // Update hidden input fields with form data
-    $("#hiddenIDNumber").val($("#idnumber").val());
-    $("#hiddenFirstName").val($("#firstName").val());
-    $("#hiddenLastName").val($("#lastName").val());
-    $("#hiddenCourse").val($("#course").val());
-    $("#hiddenYear").val($("#year").val());
-    $("#hiddenGender").val($("#gender").val());
-  });
+    $("#addStudentForm").submit(function (event) {
+      // Update hidden input fields with form data
+      console.log("Form Data before submission:", $("#addStudentForm").serialize());
+      $("#hiddenIDNumber").val($("#idnumber").val());
+      $("#hiddenFirstName").val($("#firstName").val());
+      $("#hiddenLastName").val($("#lastName").val());
+      $("#hiddenCourse").val($("#course").val());
+      $("#hiddenYear").val($("#year").val());
+      $("#hiddenGender").val($("#gender").val());
+      console.log("Form submitted!"); 
+    });
 
   // Close add modal function
   function closeAddModal() {
@@ -401,19 +423,21 @@ $(document).ready(function () {
     }
   });
 
+  $("#searchButton").click(function(event) {
+    event.preventDefault(); // Prevent default button click behavior
+    performSearch();
+});
 
   $("#searchForm").submit(function(event) {
         event.preventDefault(); // Prevent default form submission
         performSearch();
     });
 
-    // ... other code ...
-
     function performSearch() {
         var searchField = $("#searchField").val();
         var searchQuery = $("#searchInput").val().toLowerCase();
 
-        $(".table-striped tbody tr").each(function () {
+        $(".table-hover tbody tr").each(function () {
             var rowData = $(this)
                 .find("." + searchField)
                 .text()
@@ -472,6 +496,7 @@ $(document).ready(function () {
       .val(gender)
       .data("student-id", studentId);
 
+    
     // Show the form for editing
     $("#editStudentModal").modal("show");
   });

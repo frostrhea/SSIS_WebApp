@@ -18,6 +18,19 @@ class StudentManager:
         return student_data
 
     @classmethod
+    def get_courses(cls):
+        try:
+            cur = cls.mysql.connection.cursor(dictionary=True)
+            cur.execute("SELECT code, name FROM course")
+            courses = cur.fetchall()
+            #print(courses)
+            cur.close()
+            return courses
+        except Exception as e:
+            print(f"Error fetching course: {e}")
+            return [] 
+
+    @classmethod
     def add_student(cls, id, firstname, lastname, course, gender, year):
         try:
             # Check if the student with the given ID already exists

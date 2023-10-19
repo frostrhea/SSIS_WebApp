@@ -12,6 +12,8 @@ StudentManager.init_db(mysql)
 @student_bp.route('/students', methods=['GET', 'POST'])
 def list_students():
     form = StudentForm()
+    courses = StudentManager.get_courses()
+    
     if request.method == 'POST':
         search_field = request.form.get('searchField')  
         search_query = request.form.get('searchInput')  
@@ -21,15 +23,9 @@ def list_students():
         # If no search input, retrieve all students
         student_data = StudentManager.get_student_data()
 
-    return render_template('student.html', student_data=student_data, form=form)
+    return render_template('student.html', student_data=student_data, form=form, courses=courses)
 
-# TO DO: get courses for dropdown in add and edit
-#@student_bp.route('/courses', methods=['GET'])
-#def get_courses_from_db():
- #   courses = get_courses()
-
-  #  return jsonify(courses=courses)
-
+#ISSUE: OTHER GENDER OPTIONS WONT ADD TO DB
 @student_bp.route('/students/add', methods=['GET', 'POST'])
 def add_student():
     form = StudentForm()
@@ -38,12 +34,13 @@ def add_student():
         student_id = request.form.get('studentID')
         first_name = request.form.get('firstName')
         last_name = request.form.get('lastName')
-        course = request.form.get('course')
+        course_code = request.form.get('course')
         year = request.form.get('year')
         gender = request.form.get('gender')
+        print("Gender selected:", gender) 
 
         try:
-            StudentManager.add_student(student_id, first_name, last_name, course, gender, year)
+            StudentManager.add_student(student_id, first_name, last_name, course_code, gender, year)
             return redirect(url_for('student.list_students'))
         except Exception as e:
             print(f"Error adding student: {e}")
@@ -67,8 +64,8 @@ def edit_student_data():
     form = StudentForm() 
     #form_data = request.form
     #print("Form Data received:", form_data)
-    #old_id = request.form.get('old_id')
-    #print("Old ID:", old_id) 
+    gender = request.form.get('gender')
+    print("gender:", gender) 
     updated_data = {
         'new_id': request.form.get('studentID'),
         'firstname': request.form.get('firstName'),
