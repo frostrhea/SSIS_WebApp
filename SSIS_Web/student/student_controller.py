@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from SSIS_Web.student.student_model import StudentManager
 from flask_mysql_connector import MySQL
 from SSIS_Web.student.forms import StudentForm
@@ -23,6 +23,12 @@ def list_students():
 
     return render_template('student.html', student_data=student_data, form=form)
 
+# TO DO: get courses for dropdown in add and edit
+#@student_bp.route('/courses', methods=['GET'])
+#def get_courses_from_db():
+ #   courses = get_courses()
+
+  #  return jsonify(courses=courses)
 
 @student_bp.route('/students/add', methods=['GET', 'POST'])
 def add_student():

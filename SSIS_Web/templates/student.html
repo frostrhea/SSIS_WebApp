@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block title %} Student List {% endblock %} {% block
-header %} Student List {% endblock %} {% block content %}
+header %} Student List. {% endblock %} {% block content %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/student.css') }}"
@@ -8,13 +8,13 @@ header %} Student List {% endblock %} {% block content %}
 <div class="container mt-2">
   <!-- Search bar and Add button row -->
   <div class="row mb-3">
-    <div class="col-md-4">
+    <div class="col">
       <!-- Button to trigger the modal -->
-      <button type="button" class="btn btn-primary" id="addStudentButton">
+      <button type="button" class="btn btn-outline-primary" id="addStudentButton">
         Add Student
       </button>
     </div>
-    <div class="col-md-8">
+    <div class="col order-md-last">
       <!-- Dropdown menu for selecting search field and input field for search query -->
       <div class="field-selection">
         <!-- Dropdown menu for selecting search field -->
@@ -29,7 +29,8 @@ header %} Student List {% endblock %} {% block content %}
         </select>
 
         <!-- Input field for search query -->
-        <div class="input-group custom-search-input">
+        <form id="searchForm" class="col-md-9">
+        <div class="input-group custom-search-input ">
           <input
             type="text"
             class="form-control custom-search-input"
@@ -45,6 +46,7 @@ header %} Student List {% endblock %} {% block content %}
               <img src="/static/assets/search.png" alt="Search" class="icon" />
             </button>
           </div>
+        </form>
         </div>
       </div>
     </div>
@@ -52,7 +54,7 @@ header %} Student List {% endblock %} {% block content %}
 
   <div class="table-container">
     <!-- Bootstrap-styled table -->
-    <table class="table table-striped">
+    <table class="table table-hover">
       <!-- Table header -->
       <thead>
         <tr>
@@ -211,7 +213,7 @@ header %} Student List {% endblock %} {% block content %}
             <button
               type="button"
               class="btn btn-secondary"
-              id="closeModalButton"
+              id="closeEditModalButton"
               data-dismiss="modal"
             >
               Close
@@ -280,14 +282,10 @@ header %} Student List {% endblock %} {% block content %}
             </div>
             <div class="form-group">
               <label for="course">Course</label>
-              <input
-                type="text"
-                class="form-control"
-                id="course"
-                name="course"
-                required
-              />
-            </div>
+              <select class="form-control" id="course" name="course" required>
+                  <!-- Options will be dynamically added here -->
+              </select>
+          </div>
             <div class="form-group">
               <label for="year">Year</label>
               <input
@@ -339,7 +337,7 @@ header %} Student List {% endblock %} {% block content %}
               <button
                 type="button"
                 class="btn btn-secondary"
-                id="closeModalButton"
+                id="closeAddModalButton"
                 data-dismiss="modal"
               >
                 Close
@@ -385,14 +383,15 @@ $(document).ready(function () {
     $("#hiddenGender").val($("#gender").val());
   });
 
-  // Close modal function
-  function closeModal() {
+  // Close add modal function
+  function closeAddModal() {
     $("#addStudentModal").modal("hide");
   }
 
-  $("#closeModalButton").click(function () {
-    closeModal();
+  $("#closeAddModalButton").click(function () {
+    closeAddModal();
   });
+
 
   $("#deleteStudentFromList").click(function (event) {
     if (!confirm("Are you sure you want to delete this student?")) {
@@ -402,29 +401,48 @@ $(document).ready(function () {
     }
   });
 
-  $("#searchButton").click(function () {
-    event.stopPropagation();
-    var searchField = $("#searchField").val();
-    var searchQuery = $("#searchInput").val();
 
-    // Iterate through each table row and filter based on search criteria
-    $(".table-striped tbody tr").each(function () {
-      var rowData = $(this)
-        .find("." + searchField)
-        .text()
-        .toLowerCase();
-
-      if (searchField === "all") {
-        rowData = $(this).text().toLowerCase();
-      }
-      // Show/hide rows based on search query
-      if (rowData.includes(searchQuery)) {
-        $(this).show();
-      } else {
-        $(this).hide();
-      }
+  $("#searchForm").submit(function(event) {
+        event.preventDefault(); // Prevent default form submission
+        performSearch();
     });
+
+    // ... other code ...
+
+    function performSearch() {
+        var searchField = $("#searchField").val();
+        var searchQuery = $("#searchInput").val().toLowerCase();
+
+        $(".table-striped tbody tr").each(function () {
+            var rowData = $(this)
+                .find("." + searchField)
+                .text()
+                .toLowerCase();
+
+            if (searchField === "all") {
+                rowData = $(this).text().toLowerCase();
+            }
+
+            // Show/hide rows based on search query
+            if (rowData.includes(searchQuery)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    }
+
+
+
+   // Edit Modal
+   function closeEditModal() {
+    $("#editStudentModal").modal("hide");
+  }
+
+  $("#closeEditModalButton").click(function () {
+    closeEditModal();
   });
+  
 
   $(".edit-button").click(function () {
     var studentId = $(this).data("student-id");

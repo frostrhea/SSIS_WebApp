@@ -2,6 +2,7 @@
     text-align: center; 
     vertical-align: middle; 
     padding: 0.25rem;
+    
 }
 
 .table-container{
@@ -22,11 +23,7 @@
   }
 
 
-#searchLayout {
-    display: flex;
-    justify-content: flex-end; 
-    width: 100%;
-  }
+
 
 .search-icon {
     width: 24px;
@@ -37,26 +34,20 @@
 
 
 .input-group {
-  width: 1500px;
   margin-left: 5px;
 }
 
 .field-selection {
   display: flex;
-  align-items: center;
-  width: 600px;
-
+  text-align: right;
 }
 
 .search-selector{
   background-color: ghostwhite;
+  width:150px;
 }
 
-.custom-search-input {
 
-  margin-right: 0px;
-  float: right;
-}
 
 .btn-group {
   padding: 0.25rem;
@@ -68,4 +59,25 @@
 
 .btn-group button:last-child {
   margin-right: 0; 
+}
+
+
+::-webkit-scrollbar {
+  width: 8px;
+  border-radius: 1px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: 	#B0B0B0; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #888; 
 }
