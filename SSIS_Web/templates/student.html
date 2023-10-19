@@ -138,7 +138,6 @@ header %} Student List {% endblock %} {% block content %}
           class="editStudentForm"
           id="editStudentForm"
         >
-        
           <!-- Input fields for student information -->
           <div class="form-group">
             <label for="studentID">ID Number</label>
@@ -458,6 +457,17 @@ $(document).ready(function () {
     // Show the form for editing
     $("#editStudentModal").modal("show");
   });
+
+$("#editStudentForm").submit(function(event) {
+    event.preventDefault();
+
+    var studentId = $("#editStudentForm input[name='studentID']").data("student-id");
+    console.log("Old ID before appending:", studentId);
+    console.log("Form Data before submission:", $("#editStudentForm").serialize());
+    $("#editStudentForm").append('<input type="hidden" name="old_id" value="' + studentId + '">');
+    $("#editStudentForm").unbind('submit').submit();
+});
+
 });
 
 //-----

@@ -78,8 +78,6 @@ class StudentManager:
     def update_student(cls, old_id, new_id, firstname, lastname, course, gender, year):
         try:
             cur = cls.mysql.connection.cursor()
-            print(old_id)
-            print(new_id)
             cur.execute("UPDATE student_info SET `id`=%s,  `firstname` = %s, `lastname` = %s, `course` = %s, `gender` = %s, `year` = %s WHERE `id` = %s",
                         (new_id, firstname, lastname, course, gender, year, old_id))
             cls.mysql.connection.commit()

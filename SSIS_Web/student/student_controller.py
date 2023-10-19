@@ -58,8 +58,11 @@ def edit_student(student_id):
     
 @student_bp.route('/students/edit/', methods=['POST'])
 def edit_student_data():
-    form = StudentForm()
-    student_id = request.form.get('studentID')
+    form = StudentForm() 
+    #form_data = request.form
+    #print("Form Data received:", form_data)
+    #old_id = request.form.get('old_id')
+    #print("Old ID:", old_id) 
     updated_data = {
         'new_id': request.form.get('studentID'),
         'firstname': request.form.get('firstName'),
@@ -67,10 +70,8 @@ def edit_student_data():
         'course': request.form.get('course'),
         'year': request.form.get('year'),
         'gender': request.form.get('gender'),
-        'old_id': student_id
+        'old_id': request.form.get('old_id')
     }
     StudentManager.update_student( **updated_data) 
     return redirect(url_for('student.list_students'))
-
-# something wrong with new and old id, must find a way to use old id and new id
 
