@@ -7,6 +7,9 @@ mysql = MySQL()
 student_bp = Blueprint('student', __name__)
 StudentManager.init_db(mysql)  
 
+@student_bp.route('/')
+def home():
+    return render_template('home.html')
 
 
 @student_bp.route('/students', methods=['GET', 'POST'])

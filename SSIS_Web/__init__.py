@@ -26,6 +26,7 @@ def create_app(test_config=None):
     
     student_manager = StudentManager(mysql)
     
+    
     from .student.student_controller import student_bp as student_blueprint
     app.register_blueprint(student_blueprint)
 

@@ -1,0 +1,35 @@
+.header a {
+  text-decoration: none;
+  color: #333;
+}
+
+.header {
+  text-align: right;
+  padding-top: 0em;
+  padding-left: 0.1em;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 80px;
+  line-height: 80px; 
+}
+
+.header a:hover {
+  color:  #00ace6; 
+}
+
+.headerlist {
+  text-align: left;
+  padding-top: 0em;
+  padding-left: 0em;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 350px;
+  line-height: 240px;
+  float: left;
+}
+
+.container  {
+  float: left;
+  padding-top: 3em;
+}
+
