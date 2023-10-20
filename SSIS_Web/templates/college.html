@@ -8,13 +8,13 @@
   <!-- Search bar and Add button row -->
   <div class="row mb-3">
     <div class="col">
-      <h1 class="header">Course List.</h1> 
+      <h1 class="header">College List.</h1> 
     </div>
     <div class="col mt-auto">
       <!-- Button to trigger the modal -->
       <button type="button" class="btn btn-outline-info" id="addButton">
         <img src="/static/assets/add.png" alt="Add" class="icon" />
-        Add Course
+        Add College
       </button>
     </div>
     <div class="col order-md-last mt-auto">
@@ -23,9 +23,8 @@
         <!-- Dropdown menu for selecting search field -->
         <select class="form-control search-selector" id="searchField">
           <option value="all">All columns</option>
-          <option value="code">Course code</option>
-          <option value="name">Course name</option>
-          <option value="college">College</option>
+          <option value="code">College code</option>
+          <option value="name">College name</option>
         </select>
 
         <!-- Input field for search query -->
@@ -58,30 +57,27 @@
       <!-- Table header -->
       <thead>
         <tr>
-          <th scope="col">Course Code</th>
-          <th scope="col">Course Name</th>
-          <th scope="col">College</th>
+          <th scope="col">College Code</th>
+          <th scope="col">College Name</th>
           <th scope="col">Actions</th>
         </tr>
       </thead>
       <tbody>
         <!-- Table rows for student data -->
-        {% for course in course_data %}
+        {% for college in college_data %}
         <tr>
           <!-- Data for each column -->
-          <th scope="row" class="code">{{ course.code }}</th>
-          <td class="name">{{ course.name }}</td>
-          <td class="college">{{ course.college }}</td>
+          <th scope="row" class="code">{{ college.code }}</th>
+          <td class="name">{{ college.name }}</td>
           <td>
             <div class="btn-group" role="group">
               <!-- Edit button -->
               <button
                 class="btn btn-outline-info btn-sm edit-button"
                 data-toggle="modal"
-                data-target="#editCourseModal"
-                data-code="{{ course.code }}"
-                data-name="{{ course.name }}"
-                data-college="{{ course.college }}"
+                data-target="#editModal"
+                data-code="{{ college.code }}"
+                data-name="{{ college.name }}"
               >
                 <img src="/static/assets/edit.png" alt="Edit" class="icon" />
                 Edit
@@ -89,15 +85,15 @@
               
               <!-- Delete button form -->
               <form
-                id="deleteCourseForm"
-                action="/courses/delete/{{ course.code }}"
+                id="deleteForm"
+                action="/colleges/delete/{{ college.code }}"
                 method="POST"
               >
                 {{ form.hidden_tag() }}
                 <button
                   class="btn btn-outline-danger btn-sm delete-button ml-10"
-                  data-course-code="{{ course.code }}"
-                  id="deleteCourseFromList"
+                  data-college-code="{{ college.code }}"
+                  id="deleteFromList"
                 >
                   <img
                     src="/static/assets/delete.png"
@@ -116,24 +112,24 @@
   </div>
 </div>
 
-<!-- EDIT Student Modal -->
-<div class="modal fade" id="editCourseModal" tabindex="-1" role="dialog" aria-labelledby="editCourseModalLabel" aria-hidden="true">
+<!-- EDIT Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-      <h5 class="modal-title" id="editCourseModalLabel">Edit Course</h5>
+      <h5 class="modal-title" id="editModalLabel">Edit College</h5>
       </div>
       <div class="modal-body">
         <!-- Form to edit an existing student -->
         <form
-          action="/courses/edit/"
+          action="/colleges/edit/"
           method="POST"
-          class="editCourseForm"
-          id="editCourseForm"
+          class="editForm"
+          id="editForm"
         >
           <!-- Input fields for student information -->
           <div class="form-group">
-            <label for="code">Course Code</label>
+            <label for="code">College Code</label>
             <input
               type="text"
               class="form-control"
@@ -145,7 +141,7 @@
             />
           </div>
           <div class="form-group">
-            <label for="name">Course Name</label>
+            <label for="name">College Name</label>
             <input
               type="text"
               class="form-control"
@@ -154,22 +150,7 @@
               data-student-id=""
               required
             />
-          </div>
-          <div class="form-group">
-            <label for="college">College</label>
-            <select 
-              type="text"
-              class="form-control"
-              id="college"
-              name="college"
-              data-student-id=""
-              required 
-            >
-              {% for college in colleges %}
-                  <option value="{{ college.code }}">{{ college.name }}</option>
-                {% endfor %} 
-            </select>     
-          </div>
+
 
          
           <!-- CSRF Token -->
@@ -187,66 +168,35 @@
             </button>
             <button type="submit" class="btn btn-primary">Save Changes</button>
           </div>
-          
         </form>
       </div>
     </div>
   </div>
 </div>
+</div>
   
 
         
-    
-  <!-- Add Student Modal -->
-  <div
-    class="modal fade"
-    id="addCourseModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="addCourseModalLabel"
-    aria-hidden="true"
-  >
+<!-- Add College Modal -->
+<div class="modal fade" id="addCollegeModal" tabindex="-1" role="dialog" aria-labelledby="addCollegeModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addCourseModalLabel">
-            Add New Course
-          </h5>
+          <h5 class="modal-title" id="addCollegeModalLabel">Add New College</h5>
         </div>
         <div class="modal-body">
-          <!-- Form to add a new student -->
-          <form id="addCourseForm" action="/courses/add" method="POST">
-            <!-- Input fields for student information -->
+          <!-- Form to add a new college -->
+          <form id="addCollegeForm" action="/colleges/add" method="POST">
+            <!-- Input fields for college information -->
             <div class="form-group">
-              <label for="code">Course Code</label>
-              <input
-                type="text"
-                class="form-control"
-                id="code"
-                name="code"
-                required
-              />
+              <label for="addCode">College Code</label>
+              <input type="text" class="form-control" id="code" name="code" required />
             </div>
             <div class="form-group">
-              <label for="name">Course Name</label>
-              <input
-                type="text"
-                class="form-control"
-                id="name"
-                name="name"
-                required
-              />
+              <label for="addName">College Name</label>
+              <input type="text" class="form-control" id="name" name="name" required />
             </div>
-            <div class="form-group">
-              <label for="college">College</label>
-              <select class="form-control" id="college" name="college" required>
-                <option value="" disabled selected>Select a college</option>
-                  {% for college in colleges %}
-                    <option value="{{ college.code }}">{{ college.name }}</option>
-                  {% endfor %}
-              </select>
-            </div>
-
+            
             <!-- Hidden input fields to store form data -->
             <input
               type="hidden"
@@ -258,12 +208,7 @@
               id="hiddenName"
               name="hiddenName"
             />
-            <input
-              type="hidden"
-              id="hiddenCollege"
-              name="hiddenLCollege"
-            />
-
+            
             <!-- CSRF Token -->
             {{ form.hidden_tag() }}
 
@@ -278,7 +223,7 @@
                 Close
               </button>
               <button type="submit" class="btn btn-primary">
-                Add Student
+                Add College
               </button>
             </div>
           </form>
@@ -286,36 +231,34 @@
       </div>
     </div>
   </div>
-</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 $(document).ready(function () {
-   $("#addButton").click(function () {
-      // Clear input fields and hidden fields when the modal is opened
-      $("#addCourseForm")[0].reset();
-      $("#hiddenCode").val("");
-      $("#hiddenName").val("");
-      $("#hiddenCollege").val("");
+    $("#addButton").click(function () {
+        console.log("Add button clicked");
+        // Clear input fields and hidden fields when the modal is opened
+        $("#addCollegeForm")[0].reset();
+        $("#hiddenCode").val("");
+        $("#hiddenName").val("");
 
-      $("#addCourseModal").modal("show");
+        $("#addCollegeModal").modal("show");
     });
 
-    $("#addCourseForm").submit(function (event) {
-      // Update hidden input fields with form data
-      console.log("Form Data before submission:", $("#addCourseForm").serialize());
-      $("#hiddenCode").val($("#code").val());
-      $("#hiddenName").val($("#courseName").val());
-      $("#hiddenCollege").val($("#college").val());
+    $("#addCollegeForm").submit(function (event) {
+        // Update hidden input fields with form data
+        console.log("Form Data before submission:", $("#addCollegeForm").serialize());
+        $("#hiddenCode").val($("#code").val());
+        $("#hiddenName").val($("#name").val());
 
-      console.log("Form submitted!"); 
+        console.log("Form submitted!"); 
     });
 
   // Close add modal function
   function closeAddModal() {
-    $("#addCourseModal").modal("hide");
+    $("#addCollegeModal").modal("hide");
   }
 
   $("#closeAddModalButton").click(function () {
@@ -323,8 +266,8 @@ $(document).ready(function () {
   });
 
 
-  $("#deleteCourseFromList").click(function (event) {
-    if (!confirm("Are you sure you want to delete this course?")) {
+  $("#deleteFromList").click(function (event) {
+    if (!confirm("Are you sure you want to delete this college?")) {
       event.preventDefault();
     } else {
       var code = $(this).data("code");
@@ -368,7 +311,7 @@ $(document).ready(function () {
 
    // Edit Modal
    function closeEditModal() {
-    $("#editCourseModal").modal("hide");
+    $("#editModal").modal("hide");
   }
 
   $("#closeEditModalButton").click(function () {
@@ -379,31 +322,27 @@ $(document).ready(function () {
   $(".edit-button").click(function () {
     var code = $(this).data("code");
     var name = $(this).data("name");
-    var college = $(this).data("college");
 
     // Populate the form fields with the student data
-    $("#editCourseForm input[name='code']")
+    $("#editForm input[name='code']")
       .val(code)
       .data("code", code);
-    $("#editCourseForm input[name='name']")
+    $("#editForm input[name='name']")
       .val(name)
       .data("code", code);
-    $("#editCourseForm input[name='college']")
-      .val(college)
-      .data("code", code);
-    
+
     // Show the form for editing
-    $("#editCourseModal").modal("show");
+    $("#editModal").modal("show");
   });
 
-$("#editCourseForm").submit(function(event) {
+$("#editForm").submit(function(event) {
     event.preventDefault();
 
-    var code = $("#editCourseForm input[name='code']").data("code");
+    var code = $("#editForm input[name='code']").data("code");
     console.log("Old ID before appending:", code);
-    console.log("Form Data before submission:", $("#editCourseForm").serialize());
-    $("#editCourseForm").append('<input type="hidden" name="old_code" value="' + code + '">');
-    $("#editCourseForm").unbind('submit').submit();
+    console.log("Form Data before submission:", $("#editForm").serialize());
+    $("#editForm").append('<input type="hidden" name="old_code" value="' + code + '">');
+    $("#editForm").unbind('submit').submit();
 });
 
 });
