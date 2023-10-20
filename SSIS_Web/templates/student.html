@@ -188,9 +188,9 @@
               data-student-id=""
               required
             >
-                {% for course in courses %}
-                  <option value="{{ course.code }}">{{ course.name }}</option>
-                {% endfor %} 
+            {% for course in courses %}
+              <option value="{{ course.code }}">{{ course.name }}</option>
+            {% endfor %}
             </select>
           </div>
                 
@@ -208,7 +208,7 @@
           <div class="form-group">
             <label for="gender">Gender</label>
             <select class="form-control" id="gender" name="gender" required>
-              <option value="" disabled selected>Select gender</option>
+              <option value="" disabled selected class="disabled-option" >Select gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Non-binary">Non-binary</option>
@@ -218,6 +218,9 @@
             </select>
           </div>
          
+          <!-- Hidden input field to store the current course -->
+          <input type="hidden" id="currentCourse" name="currentCourse" />
+
           <!-- CSRF Token -->
           {{ form.hidden_tag() }}
 
@@ -296,7 +299,7 @@
             <div class="form-group">
               <label for="course">Course</label>
               <select class="form-control" id="course" name="course" required>
-                <option value="" disabled selected>Select a course</option>
+                <option value="" disabled selected class="disabled-option">Select a course</option>
                   {% for course in courses %}
                     <option value="{{ course.code }}">{{ course.name }}</option>
                   {% endfor %}
@@ -321,7 +324,7 @@
                 name="gender"
                 required
               >
-              <option value="" disabled selected>Select gender</option>
+              <option value="" disabled selected class="disabled-option">Select gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Non-binary">Non-binary</option>
@@ -475,6 +478,7 @@ $(document).ready(function () {
     var course = $(this).data("course");
     var year = $(this).data("year");
     var gender = $(this).data("gender");
+    var currentCourse = $(this).data("course");
 
     // Populate the form fields with the student data
     $("#editStudentForm input[name='studentID']")
@@ -495,8 +499,12 @@ $(document).ready(function () {
     $("#editStudentForm select[name='gender']")
       .val(gender)
       .data("student-id", studentId);
+    $("#currentCourse").val(currentCourse);
+  
 
-    
+    // Pre-select the correct option in the select field
+    $("#course").val(currentCourse);
+
     // Show the form for editing
     $("#editStudentModal").modal("show");
   });

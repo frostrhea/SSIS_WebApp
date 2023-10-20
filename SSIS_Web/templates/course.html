@@ -167,11 +167,13 @@
             >
               {% for college in colleges %}
                   <option value="{{ college.code }}">{{ college.name }}</option>
-                {% endfor %} 
+              {% endfor %} 
             </select>     
           </div>
 
-         
+          <!-- Hidden input field to store the current course -->
+          <input type="hidden" id="currentCollege" name="currentCollege" />
+
           <!-- CSRF Token -->
           {{ form.hidden_tag() }}
 
@@ -380,6 +382,7 @@ $(document).ready(function () {
     var code = $(this).data("code");
     var name = $(this).data("name");
     var college = $(this).data("college");
+    var currentCollege = $(this).data("college");
 
     // Populate the form fields with the student data
     $("#editCourseForm input[name='code']")
@@ -392,19 +395,23 @@ $(document).ready(function () {
       .val(college)
       .data("code", code);
     
+    $("#currentCollege").val(currentCollege);
+      // Pre-select the correct option in the select field
+    $("#college").val(currentCollege);
+    
     // Show the form for editing
     $("#editCourseModal").modal("show");
   });
 
-$("#editCourseForm").submit(function(event) {
-    event.preventDefault();
+    $("#editCourseForm").submit(function(event) {
+        event.preventDefault();
 
-    var code = $("#editCourseForm input[name='code']").data("code");
-    console.log("Old ID before appending:", code);
-    console.log("Form Data before submission:", $("#editCourseForm").serialize());
-    $("#editCourseForm").append('<input type="hidden" name="old_code" value="' + code + '">');
-    $("#editCourseForm").unbind('submit').submit();
-});
+        var code = $("#editCourseForm input[name='code']").data("code");
+        console.log("Old ID before appending:", code);
+        console.log("Form Data before submission:", $("#editCourseForm").serialize());
+        $("#editCourseForm").append('<input type="hidden" name="old_code" value="' + code + '">');
+        $("#editCourseForm").unbind('submit').submit();
+    });
 
 });
 
