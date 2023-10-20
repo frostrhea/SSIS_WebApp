@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %} Student List {% endblock %}  {% block content %}
 <link
   rel="stylesheet"
-  href="{{ url_for('static', filename='css/student.css') }}"
+  href="{{ url_for('static', filename='css/templates.css') }}"
 />
 
 <div class="container mt-2">
@@ -12,7 +12,7 @@
     </div>
     <div class="col mt-auto">
       <!-- Button to trigger the modal -->
-      <button type="button" class="btn btn-outline-info" id="addStudentButton">
+      <button type="button" class="btn btn-outline-info" id="addButton">
         <img src="/static/assets/add.png" alt="Add" class="icon" />
         Add Student
       </button>
@@ -380,7 +380,7 @@
 
 <script>
 $(document).ready(function () {
-   $("#addStudentButton").click(function () {
+   $("#addButton").click(function () {
       // Clear input fields and hidden fields when the modal is opened
       $("#addStudentForm")[0].reset();
       $("#hiddenIDNumber").val("");

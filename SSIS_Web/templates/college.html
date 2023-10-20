@@ -1,7 +1,7 @@
-{% extends "base.html" %} {% block title %} Course List {% endblock %}  {% block content %}
+{% extends "base.html" %} {% block title %} College List {% endblock %}  {% block content %}
 <link
   rel="stylesheet"
-  href="{{ url_for('static', filename='css/student.css') }}"
+  href="{{ url_for('static', filename='css/templates.css') }}"
 />
 
 <div class="container mt-2">
@@ -12,7 +12,7 @@
     </div>
     <div class="col mt-auto">
       <!-- Button to trigger the modal -->
-      <button type="button" class="btn btn-outline-info" id="addCourseButton">
+      <button type="button" class="btn btn-outline-info" id="addButton">
         <img src="/static/assets/add.png" alt="Add" class="icon" />
         Add Course
       </button>
@@ -79,7 +79,7 @@
                 class="btn btn-outline-info btn-sm edit-button"
                 data-toggle="modal"
                 data-target="#editCourseModal"
-                data-student-code="{{ course.code }}"
+                data-code="{{ course.code }}"
                 data-name="{{ course.name }}"
                 data-college="{{ course.college }}"
               >
@@ -90,13 +90,13 @@
               <!-- Delete button form -->
               <form
                 id="deleteCourseForm"
-                action="/courses/delete/{{ course.id }}"
+                action="/courses/delete/{{ course.code }}"
                 method="POST"
               >
                 {{ form.hidden_tag() }}
                 <button
                   class="btn btn-outline-danger btn-sm delete-button ml-10"
-                  data-student-id="{{ course.id }}"
+                  data-course-code="{{ course.code }}"
                   id="deleteCourseFromList"
                 >
                   <img
@@ -139,18 +139,18 @@
               class="form-control"
               id="code"
               name="code"
-              value="{{ existing_code  }}"
+              value="{{ existing_code }}"
               
               required
             />
           </div>
           <div class="form-group">
-            <label for="courseName">Course Name</label>
+            <label for="name">Course Name</label>
             <input
               type="text"
               class="form-control"
-              id="courseName"
-              name="courseName"
+              id="name"
+              name="name"
               data-student-id=""
               required
             />
@@ -228,12 +228,12 @@
               />
             </div>
             <div class="form-group">
-              <label for="courseName">Course Name</label>
+              <label for="name">Course Name</label>
               <input
                 type="text"
                 class="form-control"
-                id="courseName"
-                name="courseName"
+                id="name"
+                name="name"
                 required
               />
             </div>
@@ -293,12 +293,12 @@
 
 <script>
 $(document).ready(function () {
-   $("#addCourseButton").click(function () {
+   $("#addButton").click(function () {
       // Clear input fields and hidden fields when the modal is opened
       $("#addCourseForm")[0].reset();
-      $("#hiddenCode).val("");
+      $("#hiddenCode").val("");
       $("#hiddenName").val("");
-      $("#hiddenCollegge").val("");
+      $("#hiddenCollege").val("");
 
       $("#addCourseModal").modal("show");
     });
@@ -384,13 +384,13 @@ $(document).ready(function () {
     // Populate the form fields with the student data
     $("#editCourseForm input[name='code']")
       .val(code)
-      .data("student-id", studentId);
+      .data("code", code);
     $("#editCourseForm input[name='name']")
       .val(name)
-      .data("student-id", studentId);
+      .data("code", code);
     $("#editCourseForm input[name='college']")
       .val(college)
-      .data("student-id", studentId);
+      .data("code", code);
     
     // Show the form for editing
     $("#editCourseModal").modal("show");
@@ -399,7 +399,7 @@ $(document).ready(function () {
 $("#editCourseForm").submit(function(event) {
     event.preventDefault();
 
-    var code = $("#editStudentForm input[name='code']").data("dode");
+    var code = $("#editCourseForm input[name='code']").data("code");
     console.log("Old ID before appending:", code);
     console.log("Form Data before submission:", $("#editCourseForm").serialize());
     $("#editCourseForm").append('<input type="hidden" name="old_code" value="' + code + '">');
