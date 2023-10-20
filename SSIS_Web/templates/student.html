@@ -151,10 +151,14 @@
               class="form-control"
               id="studentID"
               name="studentID"
+              pattern="\d{4}-\d{4}"
               value="{{ existing_id  }}"
               
               required
             />
+              <small id="idHelp" class="form-text text-muted">
+                Format: YYYY-NNNN (e.g., 2023-1234)
+              </small>
           </div>
           <div class="form-group">
             <label for="firstName">First Name</label>
@@ -273,8 +277,12 @@
                 class="form-control"
                 id="studentID"
                 name="studentID"
+                pattern="\d{4}-\d{4}"
                 required
               />
+              <small id="idHelp" class="form-text text-muted">
+                Format: YYYY-NNNN (e.g., 2023-1234)
+              </small>
             </div>
             <div class="form-group">
               <label for="firstName">First Name</label>
@@ -523,11 +531,23 @@ $("#editStudentForm").submit(function(event) {
 
 //-----
 
-$("#resetButton").click(function () {
-  $(".table-striped tbody tr").show();
+document.addEventListener("DOMContentLoaded", function () {
+  var form = document.getElementById("editStudentForm");
+
+  form.addEventListener("submit", function (event) {
+    var studentIDInput = document.getElementById("studentID");
+    var inputValue = studentIDInput.value;
+    var regex = /^\d{4}-\d{4}$/;  // Regular expression for the format YYYY-NNNN
+
+    if (!regex.test(inputValue)) {
+      event.preventDefault();
+      alert("Invalid ID format. Please use the format: YYYY-NNNN (e.g., 2023-1234)");
+    }
+  });
 });
+
+
 </script>
 
 {% endblock %}
   
-// ISSUE: default course in edit student form shows incorrect course (first course)
