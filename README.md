@@ -2,8 +2,7 @@
 
 The Student Information System is a straightforward web application designed to manage student data efficiently. It allows users to perform basic CRUDL operations (Create, Read, Update, Delete, and List) for students, courses, and colleges.
 
-## Using Flask as web framework for web developement
-
+## Using Flask as web framework for web development
 ## Using SQL database (MySQL) for storing data
 
 Built with:
