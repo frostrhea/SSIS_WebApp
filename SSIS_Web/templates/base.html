@@ -21,7 +21,7 @@
   <body>
     <nav class="navbar navbar-expand-lg bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/">
           <img src="/static/assets/winIcon.png" alt="Logo" width="30" height="28" class="d-inline-block align-text-top">
           Student Information System</a>
         
@@ -43,9 +43,7 @@
               <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/students"
-                      >Students</a
-                    >
+                    <a class="nav-link" href="/students">Students</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="/courses">Courses</a>
@@ -79,3 +77,17 @@
   </body>
 </html>
 
+
+
+<script>
+$(document).ready(function() {
+  // Get the current URL path and find the corresponding link in the navbar
+  var currentPath = window.location.pathname;
+  $('.navbar-nav .nav-link').each(function() {
+    var href = $(this).attr('href');
+    if (href === currentPath) {
+      $(this).addClass('active-page');
+    }
+  });
+});
+</script>
