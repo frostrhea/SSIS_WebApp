@@ -14,3 +14,28 @@
 .navbar-nav .nav-link.active-page {
     font-weight: bold;
   }
+
+
+  .alert {
+    position: fixed;
+    float: right;
+    margin-top: 30px;
+    margin-right: 10px;
+    bottom: 0;
+    width: 25%;
+    text-align: center;
+    font-size: bold 14px;
+}
+
+.alert-success {
+    background-color: #D4EDDA;
+    border-color: #C3E6CB;
+    color: #155724 !important;
+
+}
+
+.alert-danger {
+    background-color: #F8D7DA;
+    border-color: #F5C6CB;
+    color: #721C24 !important;
+}

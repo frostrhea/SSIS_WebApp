@@ -89,15 +89,15 @@
               
               <!-- Delete button form -->
               <form
-                id="deleteForm"
-                action="/colleges/delete/{{ college.code }}"
-                method="POST"
+              id="deleteCollegeForm{{ college.code }}"
+              action="/colleges/delete/{{ college.code }}"
+              method="POST"
+              class="row-button delete-college-form"
               >
                 {{ form.hidden_tag() }}
                 <button
                   class="btn btn-outline-danger btn-sm delete-button ml-10 row-button"
                   data-college-code="{{ college.code }}"
-                  id="deleteFromList"
                 >
                   <img
                     src="/static/assets/delete.png"
@@ -290,11 +290,9 @@ $(document).ready(function () {
   });
 
 
-  $("#deleteFromList").click(function (event) {
-    if (!confirm("Are you sure you want to delete this college?")) {
+  $(".delete-college-form").click(function (event) {
+    if (!confirm("Are you sure you want to delete this college? The courses under this college will also be deleted.")) {
       event.preventDefault();
-    } else {
-      var code = $(this).data("code");
     }
   });
 

@@ -92,25 +92,25 @@
               </button>
               
               <!-- Delete button form -->
-              <form
-                id="deleteCourseForm"
-                action="/courses/delete/{{ course.code }}"
-                method="POST"
-              >
-                {{ form.hidden_tag() }}
-                <button
-                  class="btn btn-outline-danger btn-sm delete-button ml-10 row-button"
-                  data-course-code="{{ course.code }}"
-                  id="deleteCourseFromList"
-                >
-                  <img
-                    src="/static/assets/delete.png"
-                    alt="Delete"
-                    class="icon row-button"
-                  />
-                  Delete
-                </button>
-              </form>
+                <form
+                    id="deleteCourseForm{{ course.code }}"
+                    action="/courses/delete/{{ course.code }}"
+                    method="POST"
+                    class="row-button delete-course-form"
+                    >
+                    {{ form.hidden_tag() }}
+                    <button
+                        class="btn btn-outline-danger btn-sm delete-button ml-10 row-button"
+                        data-course-code="{{ course.code }}"
+                    >
+                        <img
+                        src="/static/assets/delete.png"
+                        alt="Delete"
+                        class="icon row-button"
+                        />
+                        Delete
+                    </button>
+                </form>
             </div>
           </td>
         </tr>
@@ -347,13 +347,11 @@ $(document).ready(function () {
   });
 
 
-  $("#deleteCourseFromList").click(function (event) {
-    if (!confirm("Are you sure you want to delete this course?")) {
-      event.preventDefault();
-    } else {
-      var code = $(this).data("code");
+  $(".delete-course-form").submit(function(event) {
+    if (!confirm("Are you sure you want to delete this course? The students under this course will also be deleted.")) {
+        event.preventDefault();
     }
-  });
+});
 
   $("#searchButton").click(function(event) {
     event.preventDefault(); // Prevent default button click behavior

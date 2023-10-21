@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash
 from SSIS_Web.student.student_model import StudentManager
 from flask_mysql_connector import MySQL
 from SSIS_Web.student.forms import StudentForm
@@ -43,24 +43,23 @@ def add_student():
 
         try:
             StudentManager.add_student(student_id, first_name, last_name, course_code, gender, year)
+            flash(f'Student {student_id} added successfully!', 'success')
             return redirect(url_for('student.list_students'))
         except Exception as e:
             print(f"Error adding student: {e}")
+            flash('Error adding student. Please try again.', 'error')
     return render_template('student.html', form=form)
 
 @student_bp.route('/students/delete/<string:student_id>', methods=['POST'])
 def delete_student(student_id):
     try:
         StudentManager.delete_student(student_id)
+        flash(f'Student {student_id} deleted successfully!', 'success')
         return redirect(url_for('student.list_students'))
     except Exception as e:
         print(f"Error deleting student: {e}")
+        flash('Error deleting student. Please try again.', 'error')
         
-@student_bp.route('/students/edit/<string:student_id>', methods=['GET'])
-def edit_student(student_id):
-    student = StudentManager.get_student_by_id(student_id)
-    return render_template('student.html', student=student, existing_id=student_id)  
-    
 @student_bp.route('/students/edit/', methods=['POST'])
 def edit_student_data():
     form = StudentForm() 
@@ -77,6 +76,6 @@ def edit_student_data():
         'gender': request.form.get('gender'),
         'old_id': request.form.get('old_id')
     }
-    StudentManager.update_student( **updated_data) 
+    StudentManager.update_student(**updated_data) 
+    flash(f'Student {updated_data["new_id"]} updated successfully!', 'success')
     return redirect(url_for('student.list_students'))
-

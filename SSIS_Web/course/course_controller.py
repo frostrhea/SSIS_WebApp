@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash
 from SSIS_Web.course.course_model import CourseManager
 from flask_mysql_connector import MySQL
 from SSIS_Web.course.forms import CourseForm
@@ -29,23 +29,27 @@ def add_course():
     form = CourseForm()
     if request.method == 'POST' and form.validate_on_submit():
         # Get data from the form submission
-        code = request.form.get('code')
+        code = request.form.get('code').upper()
         name = request.form.get('name')
         college = request.form.get('college')
         try:
             CourseManager.add_course(code, name, college)
+            flash(f'Course {code} added successfully!', 'success')
             return redirect(url_for('course.list_courses'))
         except Exception as e:
             print(f"Error adding course: {e}")
+            flash('Error adding course. Please try again.', 'error')
     return render_template('course.html', form=form)
 
 @course_bp.route('/courses/delete/<string:code>', methods=['POST'])
 def delete_course(code):
     try:
         CourseManager.delete_course(code)
+        flash(f'Course {code} deleted successfully!', 'success')
         return redirect(url_for('course.list_courses'))
     except Exception as e:
         print(f"Error deleting course: {e}")
+        flash('Error deleting course. Please try again.', 'error')
         
 @course_bp.route('/courses/edit/<string:code>', methods=['GET'])
 def edit_course(code):
@@ -58,10 +62,11 @@ def edit_course_data():
     #form_data = request.form
     #print("Form Data received:", form_data)
     updated_data = {
-        'new_code': request.form.get('code'),
+        'new_code': request.form.get('code').upper(),
         'name': request.form.get('name'),
         'college': request.form.get('college'), 
         'old_code': request.form.get('old_code')
     }
     CourseManager.update_course( **updated_data) 
+    flash(f'Course {updated_data["new_code"]} updated successfully!', 'success')
     return redirect(url_for('course.list_courses'))

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from SSIS_Web.college.college_model import CollegeManager
 from flask_mysql_connector import MySQL
 from SSIS_Web.college.forms import CollegeForm
@@ -28,13 +28,15 @@ def add_college():
     form = CollegeForm()
     if request.method == 'POST' and form.validate_on_submit():
         # Get data from the form submission
-        code = request.form.get('code')
+        code = request.form.get('code').upper()
         name = request.form.get('name')
         try:
             CollegeManager.add_college(code, name)
+            flash(f'College {code} added successfully!', 'success')
             return redirect(url_for('college.list_colleges'))
         except Exception as e:
             print(f"Error adding college: {e}")
+            flash('Error deleting college. Please try again.', 'error')
     return render_template('college.html', form=form)
 
 
@@ -42,9 +44,11 @@ def add_college():
 def delete_college(code):
     try:
         CollegeManager.delete_college(code)
+        flash(f'College {code} added successfully!', 'success')
         return redirect(url_for('college.list_colleges'))
     except Exception as e:
         print(f"Error deleting college: {e}")
+        flash('Error deleting college. Please try again.', 'error')
         
 @college_bp.route('/colleges/edit/<string:code>', methods=['GET'])
 def edit_college(code):
@@ -55,9 +59,10 @@ def edit_college(code):
 def edit_college_data():
     form = CollegeForm() 
     updated_data = {
-        'new_code': request.form.get('code'),
+        'new_code': request.form.get('code').upper(),
         'name': request.form.get('name'), 
         'old_code': request.form.get('old_code')
     }
-    CollegeManager.update_college( **updated_data) 
+    CollegeManager.update_college( **updated_data)
+    flash(f'College {updated_data["new_code"]} updated successfully!', 'success') 
     return redirect(url_for('college.list_colleges'))
