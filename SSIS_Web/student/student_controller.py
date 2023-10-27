@@ -39,16 +39,14 @@ def add_student():
         course_code = request.form.get('course')
         year = request.form.get('year')
         gender = request.form.get('gender')
-        print("Gender selected:", gender) 
-
-        try:
-            StudentManager.add_student(student_id, first_name, last_name, course_code, gender, year)
+        
+        if StudentManager.add_student(student_id, first_name, last_name, course_code, gender, year) == Exception:
+            flash('Error adding student, duplicate ID. Please try again.', 'error')
+        else:
             flash(f'Student {student_id} added successfully!', 'success')
-            return redirect(url_for('student.list_students'))
-        except Exception as e:
-            print(f"Error adding student: {e}")
-            flash('Error adding student. Please try again.', 'error')
+        return redirect(url_for('student.list_students'))
     return render_template('student.html', form=form)
+
 
 @student_bp.route('/students/delete/<string:student_id>', methods=['POST'])
 def delete_student(student_id):
@@ -76,6 +74,8 @@ def edit_student_data():
         'gender': request.form.get('gender'),
         'old_id': request.form.get('old_id')
     }
-    StudentManager.update_student(**updated_data) 
-    flash(f'Student {updated_data["new_id"]} updated successfully!', 'success')
+    if StudentManager.update_student(**updated_data) == Exception:
+         flash('Error saving student, duplicate ID. Please try again.', 'error')
+    else:
+        flash(f'Student {updated_data["new_id"]} updated successfully!', 'success')
     return redirect(url_for('student.list_students'))

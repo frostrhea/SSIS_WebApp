@@ -32,13 +32,15 @@ def add_course():
         code = request.form.get('code').upper()
         name = request.form.get('name')
         college = request.form.get('college')
-        try:
-            CourseManager.add_course(code, name, college)
-            flash(f'Course {code} added successfully!', 'success')
-            return redirect(url_for('course.list_courses'))
-        except Exception as e:
-            print(f"Error adding course: {e}")
+        
+        if CourseManager.add_course(code, name, college) == Exception:
             flash('Error adding course. Please try again.', 'error')
+        else:
+            flash(f'Course {code} added successfully!', 'success')
+        return redirect(url_for('course.list_courses'))
+        #except Exception as e:
+         #   print(f"Error adding course: {e}")
+          #  flash('Error adding course. Please try again.', 'error')
     return render_template('course.html', form=form)
 
 @course_bp.route('/courses/delete/<string:code>', methods=['POST'])
@@ -67,6 +69,8 @@ def edit_course_data():
         'college': request.form.get('college'), 
         'old_code': request.form.get('old_code')
     }
-    CourseManager.update_course( **updated_data) 
-    flash(f'Course {updated_data["new_code"]} updated successfully!', 'success')
+    if CourseManager.update_course( **updated_data) == Exception:
+        flash('Error saving course, duplicate code. Please try again.', 'error')
+    else:
+        flash(f'Course {updated_data["new_code"]} updated successfully!', 'success')
     return redirect(url_for('course.list_courses'))

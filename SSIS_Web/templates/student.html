@@ -26,12 +26,13 @@
       <!-- Dropdown menu for selecting search field and input field for search query -->
       <div class="field-selection">
         <!-- Dropdown menu for selecting search field -->
-        <select class="form-control search-selector" id="searchField">
+        <select class="form-select search-selector" id="searchField">
           <option value="all">All columns</option>
           <option value="id">ID</option>
           <option value="firstname">First name</option>
           <option value="lastname">Last name</option>
           <option value="course">Course</option>
+          <option value="college">College</option>
           <option value="year">Year</option>
           <option value="gender">Gender</option>
         </select>
@@ -70,6 +71,7 @@
           <th scope="col">First Name</th>
           <th scope="col">Last Name</th>
           <th scope="col">Course</th>
+          <th scope="col">College</th>
           <th scope="col">Year</th>
           <th scope="col">Gender</th>
           <th scope="col">Actions</th>
@@ -84,6 +86,7 @@
           <td class="firstname">{{ student.firstname }}</td>
           <td class="lastname">{{ student.lastname }}</td>
           <td class="course">{{ student.course }}</td>
+          <td class="college">{{ student.college }}</td>
           <td class="year">{{ student.year }}</td>
           <td class="gender">{{ student.gender }}</td>
           <td>
@@ -192,7 +195,7 @@
             <label for="course">Course</label>
             <select
               type="text"
-              class="form-control"
+              class="form-select"
               id="course"
               name="course"
               data-student-id=""
@@ -215,9 +218,10 @@
               required
             />
           </div>
+
           <div class="form-group">
             <label for="gender">Gender</label>
-            <select class="form-control" id="gender" name="gender" required>
+            <select class="form-select" id="gender" name="gender" required>
               <option value="" disabled selected class="disabled-option" >Select gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -312,7 +316,7 @@
             </div>
             <div class="form-group">
               <label for="course">Course</label>
-              <select class="form-control" id="course" name="course" required>
+              <select class="form-select" id="course" name="course" required>
                 <option value="" disabled selected class="disabled-option">Select a course</option>
                   {% for course in courses %}
                     <option value="{{ course.code }}">{{ course.name }}</option>
@@ -333,7 +337,7 @@
             <div class="form-group">
               <label for="gender">Gender</label>
               <select
-                class="form-control"
+                class="form-select"
                 id="gender"
                 name="gender"
                 required

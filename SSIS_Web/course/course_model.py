@@ -38,6 +38,7 @@ class CourseManager:
             cur.execute("SELECT * FROM course WHERE `code` = %s", (code,))
             if cur.fetchone():
                 print(f"Course with ID '{code}' already exists.")
+                return Exception
             else:
                 # Insert a new course into the database
                 cur.execute("INSERT INTO course (`code`, `name`, `college`) VALUES (%s, %s, %s)",
@@ -79,10 +80,18 @@ class CourseManager:
     def update_course(cls, old_code, new_code, name, college):
         try:
             cur = cls.mysql.connection.cursor()
-            cur.execute("UPDATE course SET `code`=%s,  `name` = %s, `college` = %s WHERE `code` = %s",
-                        (new_code, name, college, old_code))
-            cls.mysql.connection.commit()
-            return True
+            cur.execute("SELECT * FROM course WHERE `code` = %s", (new_code,))
+            if cur.fetchone():
+                if old_code == new_code:
+                    pass 
+                else:
+                    print(f"Student with ID '{new_code}' already exists.")
+                    return Exception
+            else:
+                cur.execute("UPDATE course SET `code`=%s,  `name` = %s, `college` = %s WHERE `code` = %s",
+                            (new_code, name, college, old_code))
+                cls.mysql.connection.commit()
+                return True
         except Exception as e:
             print(f"Error updating courset: {e}")
         return False

@@ -11,7 +11,7 @@ class StudentManager:
     @classmethod
     def get_student_data(cls):
         cur = cls.mysql.connection.cursor(dictionary=True)
-        cur.execute("SELECT * FROM student_info")
+        cur.execute("SELECT * FROM student_info INNER JOIN course on course.code = student_info.course")
         student_data = cur.fetchall()
         cur.close()
 
@@ -38,6 +38,7 @@ class StudentManager:
             cur.execute("SELECT * FROM student_info WHERE `id` = %s", (id,))
             if cur.fetchone():
                 print(f"Student with ID '{id}' already exists.")
+                return Exception
             else:
                 # Insert a new student into the database
                 cur.execute("INSERT INTO student_info (`id`, `firstname`, `lastname`, `course`, `gender`, `year`) VALUES (%s, %s, %s, %s, %s, %s)",
@@ -77,7 +78,7 @@ class StudentManager:
             else:
                 # Search by all columns
                 cur.execute("SELECT * FROM student_info WHERE id LIKE %s OR firstname LIKE %s OR lastname LIKE %s OR course LIKE %s OR year LIKE %s OR gender LIKE %s",
-                            (f"%{query}%", f"%{query}%", f"%{query}%", f"%{query}%", f"%{query}%", f"%{query}%"))
+                            (f"%{query}%", f"%{query}%", f"%{query}%", f"%{query}%", f"%{query}%", f"{query}"))
 
             student_data = cur.fetchall()
             cur.close()
@@ -91,9 +92,17 @@ class StudentManager:
     def update_student(cls, old_id, new_id, firstname, lastname, course, gender, year):
         try:
             cur = cls.mysql.connection.cursor()
-            cur.execute("UPDATE student_info SET `id`=%s,  `firstname` = %s, `lastname` = %s, `course` = %s, `gender` = %s, `year` = %s WHERE `id` = %s",
+            cur.execute("SELECT * FROM student_info WHERE `id` = %s", (new_id,))
+            if cur.fetchone():
+                if old_id == new_id:
+                    pass 
+                else:
+                    print(f"Student with ID '{new_id}' already exists.")
+                    return Exception
+            else:
+                cur.execute("UPDATE student_info SET `id`=%s,  `firstname` = %s, `lastname` = %s, `course` = %s, `gender` = %s, `year` = %s WHERE `id` = %s",
                         (new_id, firstname, lastname, course, gender, year, old_id))
-            cls.mysql.connection.commit()
+                cls.mysql.connection.commit()
             return True
         except Exception as e:
             print(f"Error updating student: {e}")
