@@ -1,5 +1,6 @@
 from flask_mysql_connector import MySQL
 
+
 class StudentManager:
     def __init__(self, mysql):
         self.mysql = mysql
@@ -11,7 +12,8 @@ class StudentManager:
     @classmethod
     def get_student_data(cls):
         cur = cls.mysql.connection.cursor(dictionary=True)
-        cur.execute("SELECT * FROM student_info INNER JOIN course on course.code = student_info.course")
+        cur.execute(
+            "SELECT * FROM student_info INNER JOIN course on course.code = student_info.course")
         student_data = cur.fetchall()
         cur.close()
 
@@ -23,15 +25,15 @@ class StudentManager:
             cur = cls.mysql.connection.cursor(dictionary=True)
             cur.execute("SELECT code, name FROM course")
             courses = cur.fetchall()
-            #print(courses)
+            # print(courses)
             cur.close()
             return courses
         except Exception as e:
             print(f"Error fetching course: {e}")
-            return [] 
+            return []
 
     @classmethod
-    def add_student(cls, id, firstname, lastname, course, gender, year):
+    def add_student(cls, pic, id, firstname, lastname, course, gender, year):
         try:
             # Check if the student with the given ID already exists
             cur = cls.mysql.connection.cursor()
@@ -41,10 +43,11 @@ class StudentManager:
                 return Exception
             else:
                 # Insert a new student into the database
-                cur.execute("INSERT INTO student_info (`id`, `firstname`, `lastname`, `course`, `gender`, `year`) VALUES (%s, %s, %s, %s, %s, %s)",
-                            (id, firstname, lastname, course, gender, year))
+                cur.execute("INSERT INTO student_info (`pic`, `id`, `firstname`, `lastname`, `course`, `gender`, `year`) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                            (pic, id, firstname, lastname, course, gender, year))
                 cls.mysql.connection.commit()
-                print(f"Student '{firstname} {lastname}' with ID '{id}' has been added.")
+                print(
+                    f"Student '{firstname} {lastname}' with ID '{id}' has been added.")
         except Exception as e:
             print(f"Error adding student: {e}")
 
@@ -52,13 +55,15 @@ class StudentManager:
     def delete_student(cls, student_id):
         try:
             cur = cls.mysql.connection.cursor()
-            cur.execute("SELECT * FROM student_info WHERE `id` = %s", (student_id,))
+            cur.execute(
+                "SELECT * FROM student_info WHERE `id` = %s", (student_id,))
             student = cur.fetchone()
 
             if student:
                 # Delete the student from the database
                 print("Deleting student with ID:", student_id)
-                cur.execute("DELETE FROM student_info WHERE `id` = %s", (student_id,))
+                cur.execute(
+                    "DELETE FROM student_info WHERE `id` = %s", (student_id,))
                 cls.mysql.connection.commit()
                 return True
             else:
@@ -66,7 +71,7 @@ class StudentManager:
         except Exception as e:
             print(f"Error deleting student: {e}")
             return False
-    
+
     @classmethod
     def search_students(cls, field=None, query=None):
         try:
@@ -74,7 +79,8 @@ class StudentManager:
 
             if field != 'all':
                 # Search by specific field
-                cur.execute(f"SELECT * FROM student_info WHERE `{field}` LIKE %s", (f"%{query}%",))
+                cur.execute(
+                    f"SELECT * FROM student_info WHERE `{field}` LIKE %s", (f"%{query}%",))
             else:
                 # Search by all columns
                 cur.execute("SELECT * FROM student_info WHERE id LIKE %s OR firstname LIKE %s OR lastname LIKE %s OR course LIKE %s OR year LIKE %s OR gender LIKE %s",
@@ -92,28 +98,29 @@ class StudentManager:
     def update_student(cls, old_id, new_id, firstname, lastname, course, gender, year):
         try:
             cur = cls.mysql.connection.cursor()
-            cur.execute("SELECT * FROM student_info WHERE `id` = %s", (new_id,))
+            cur.execute(
+                "SELECT * FROM student_info WHERE `id` = %s", (new_id,))
             if cur.fetchone():
                 if old_id == new_id:
-                    pass 
+                    pass
                 else:
                     print(f"Student with ID '{new_id}' already exists.")
                     return Exception
             else:
                 cur.execute("UPDATE student_info SET `id`=%s,  `firstname` = %s, `lastname` = %s, `course` = %s, `gender` = %s, `year` = %s WHERE `id` = %s",
-                        (new_id, firstname, lastname, course, gender, year, old_id))
+                            (new_id, firstname, lastname, course, gender, year, old_id))
                 cls.mysql.connection.commit()
             return True
         except Exception as e:
             print(f"Error updating student: {e}")
         return False
 
-
     @classmethod
     def get_student_by_id(cls, student_id):
-            cur = cls.mysql.connection.cursor(dictionary=True)
-            cur.execute("SELECT * FROM student_info WHERE `id` = %s", (student_id,))
-            student = cur.fetchone()
-            print
-            cur.close()
-            return student
+        cur = cls.mysql.connection.cursor(dictionary=True)
+        cur.execute("SELECT * FROM student_info WHERE `id` = %s",
+                    (student_id,))
+        student = cur.fetchone()
+        print
+        cur.close()
+        return student

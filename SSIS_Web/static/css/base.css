@@ -39,3 +39,49 @@
     border-color: #F5C6CB;
     color: #721C24 !important;
 }
+
+/* cloudinary stuff */
+.change-image {
+    position: absolute;
+    bottom: -55px;
+    right: 50px;
+    z-index: 2;
+  }
+
+  .circle-container {
+    position: relative;
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #ccc;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 150px;
+  }
+  
+  #preview-image {
+    position: absolute;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+  }
+  .overlay-plus {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    color: #ccc;
+    
+    pointer-events: none; /* Ensures the input can be clicked */
+    transition: opacity 0.3s ease;
+  }
+  
+  .circle-container:hover .overlay-plus {
+    opacity: 1; 
+  }
