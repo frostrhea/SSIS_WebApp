@@ -85,13 +85,14 @@
           <!-- Data for each column -->
 
           <td scope="row">
-            <img class="img rounded-pill" src="{% if student.pic is not defined or student.pic is none %}
-                {{ url_for('static', filename='assets/default-picture.jpg') }}"
-            {% else %}
+            <div class="circle-con">
+            <img class="img" src="{% if student.pic is not defined or student.pic is none %}
+            {{ url_for('static', filename='assets/default-picture.jpg') }}
+              {% else %}
                 {{ student.pic }}
-            {% endif %}"
-            style="height:55px; width:55px;"/>
-        </td>
+              {% endif %}"
+            style = "height:55px; width:55px;"/>
+            </div></td>
           <td class="id">{{ student.id}}</td>
           <td class="firstname">{{ student.firstname }}</td>
           <td class="lastname">{{ student.lastname }}</td>
@@ -306,8 +307,6 @@
               </div>
               
                 
-
-
               
             <!-- ID Number -->
             <div class="row-md-6">
@@ -444,20 +443,26 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body text-center">
-        <img id="detailsStudentPic" src="" style="height: 150px; width: 150px; border-radius: 50%;" class="mb-3" />
-      
-        <!-- Details arranged in a grid layout -->
-        <div class="row text-left">
-          <div class="col-sm-6">
-            <div>ID: <strong><span id="detailsStudentID"></span></strong></div>
-            <div>First Name: <strong><span id="detailsFirstName"></strong></span></div>
-            <div>Last Name: <strong><span id="detailsLastName"></strong></span></div>
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="form-group" style="display: flex; justify-content: center; align-items: center;">
+            <div class="image-circle" style="position: relative;">
+              <img id="detailsStudentPic" src="" class="mb-3" />
+            </div>
           </div>
-          <div class="col-sm-6 text-left">
-            <div>Course: <strong> <span id="detailsCourse"></strong></span></div>
-            <div>Year: <strong><span id="detailsYear"></strong></span></div>
-            <div>Gender: <strong><span id="detailsGender"></strong></span></div>
+        </div>
+        <!-- Details arranged in a grid layout -->
+        <div class="row">
+          <div class="col-sm-6 text-left" style="padding-left: 50px">
+            <div>ID: <strong><span id="detailsStudentID"></span></strong></div>
+            <div>First Name: <strong><span id="detailsFirstName"></span></strong></div>
+            <div>Last Name: <strong><span id="detailsLastName"></span></strong></div>
+          </div>
+          <div class="col-sm-6 text-left" style="padding-left: 20px">
+            <div>Course: <strong><span id="detailsCourse"></span></strong></div>
+            <div>Year: <strong><span id="detailsYear"></span></strong></div>
+            <div>Gender: <strong><span id="detailsGender"></span></strong></div>
           </div>
         </div>
       </div>

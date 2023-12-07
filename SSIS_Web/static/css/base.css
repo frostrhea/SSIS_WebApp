@@ -41,6 +41,29 @@
 }
 
 /* cloudinary stuff */
+.img {
+    position: absolute;
+    width: auto;
+    height: auto;
+    max-height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    object-position: center center;
+}
+
+.circle-con {
+    position: relative;
+    overflow: hidden;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 55px;
+    justify-content: center;
+  }
+
 .change-image {
     position: absolute;
     bottom: -55px;
@@ -53,23 +76,53 @@
     overflow: hidden;
     width: 150px;
     height: 150px;
-    border: 2px dashed #ccc;
+    border: 2px  #ccc;
     border-radius: 50%;
     text-align: center;
     line-height: 150px;
+    justify-content: center;
   }
   
   #preview-image {
     position: absolute;
     width: auto;
     height: auto;
-    max-width: 100%;
     max-height: 100%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     object-fit: cover;
+    object-position: center center;
   }
+
+  .image-circle {
+    position: relative;
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+    border: 2px  #ccc;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 150px;
+    justify-content: center;
+  }
+  
+  #detailsStudentPic {
+    position: absolute;
+    width: auto;
+    height: auto;
+    max-height: 100%;
+ 
+    top: 50%;
+    left: 50%;
+    
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    object-position: center center;
+  }
+
+
+
   .overlay-plus {
     position: absolute;
     top: 50%;
