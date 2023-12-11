@@ -95,11 +95,12 @@ class StudentManager:
             return None
 
     @classmethod
-    def update_student(cls, old_id, new_id, firstname, lastname, course, gender, year):
+    def update_student(cls, pic, old_id, new_id, firstname, lastname, course, gender, year):
         try:
             cur = cls.mysql.connection.cursor()
+            print(old_id)
             cur.execute(
-                "SELECT * FROM student_info WHERE `id` = %s", (new_id,))
+                "SELECT * FROM student_info WHERE `id` = %s AND `id` != %s", (new_id, old_id))
             if cur.fetchone():
                 if old_id == new_id:
                     pass
@@ -107,10 +108,11 @@ class StudentManager:
                     print(f"Student with ID '{new_id}' already exists.")
                     return Exception
             else:
-                cur.execute("UPDATE student_info SET `id`=%s,  `firstname` = %s, `lastname` = %s, `course` = %s, `gender` = %s, `year` = %s WHERE `id` = %s",
-                            (new_id, firstname, lastname, course, gender, year, old_id))
+                # Update student info
+                cur.execute("UPDATE student_info SET `pic`=%s, `id`=%s, `firstname` = %s, `lastname` = %s, `course` = %s, `gender` = %s, `year` = %s WHERE `id` = %s",
+                            (pic, new_id, firstname, lastname, course, gender, year, old_id))
                 cls.mysql.connection.commit()
-            return True
+                return True
         except Exception as e:
             print(f"Error updating student: {e}")
         return False

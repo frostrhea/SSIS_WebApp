@@ -78,11 +78,18 @@ def delete_student(student_id):
 @student_bp.route('/students/edit/', methods=['POST'])
 def edit_student_data():
     form = StudentForm()
-    # form_data = request.form
-    # print("Form Data received:", form_data)
+    pic = request.files.get('pic1')
+    if pic:
+        upload_result = upload(
+            pic, folder="SSIS Web", resource_type='image')
+        secure_url = upload_result['secure_url']
+    else:
+        secure_url = None
     gender = request.form.get('gender')
-    print("gender:", gender)
+    print("URL: ", secure_url)
+
     updated_data = {
+        'pic': secure_url,
         'new_id': request.form.get('studentID'),
         'firstname': request.form.get('firstName'),
         'lastname': request.form.get('lastName'),
@@ -91,9 +98,14 @@ def edit_student_data():
         'gender': request.form.get('gender'),
         'old_id': request.form.get('old_id')
     }
-    if StudentManager.update_student(**updated_data) == Exception:
-        flash('Error saving student, duplicate ID. Please try again.', 'error')
-    else:
-        flash(
-            f'Student {updated_data["new_id"]} updated successfully!', 'success')
+
+    try:
+        if StudentManager.update_student(**updated_data):
+            flash(
+                f'Student {updated_data["new_id"]} updated successfully!', 'success')
+        else:
+            flash('Error saving student. Please try again.', 'error')
+    except Exception as e:
+        flash(f'Error: {e}', 'error')
+        # Log the exception for debugging purposes
     return redirect(url_for('student.list_students'))
