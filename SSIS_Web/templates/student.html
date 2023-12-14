@@ -345,7 +345,7 @@
               <div class="form-group" style="display: flex; justify-content: center; align-items: center;">
                 <label for="file-input" style="cursor: pointer;">
                   <div class="circle-container" style="position: relative;">
-                    <input type="file" id="file-input" name="pic" style="position: absolute; left: -9999px;" accept="image/*" onchange="previewImage(event)">
+                    <input type="file" id="file-input" name="pic" style="position: absolute; left: -9999px;" accept="image/*" onchange="previewImage(event, this)">
 
                     <input id="image_url" name="image_url" hidden />
 
@@ -718,7 +718,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     
 });   
-  //WONT SHOW DEFAULT PIC
+ 
   
 });
 
@@ -726,39 +726,83 @@ document.addEventListener("DOMContentLoaded", function () {
 //$("input.cloudinary-fileupload[type=file]").cloudinary_fileupload();
 
 // for add
-function previewImage(event) {    
+
+function validateFileType(file) {
+  var idxDot = file.name.lastIndexOf(".") + 1;
+  var extFile = file.name.substr(idxDot, file.name.length).toLowerCase();
+  
+  if (extFile == "jpg" || extFile == "jpeg" || extFile == "png" || extFile == "gif") {
+    if (file.size <= 1048576) {
+      return true;
+    } else {
+      alert("File size exceeds 1MB. Please choose a smaller file.");
+      return false;
+    }
+  } else {
+    alert("Only jpg, jpeg, png, and gif files are allowed!");
+    return false;
+  }
+}
+
+
+
+function previewImage(event, inputElement) {
   const file = event.target.files[0];
-  const reader = new FileReader();
   const preview = document.getElementById('preview-image');
 
-  reader.onload = function (e) {
-    preview.src = e.target.result;
-    preview.style.display = 'block'; // Show the preview image
-    preview.style.opacity = file ? '1' : '0.5'; // Set opacity based on file selection
-  };
-
-  reader.readAsDataURL(file);
+  // accept images only
+  if (validateFileType(file)) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      preview.src = e.target.result;
+      preview.style.display = 'block'; // Show the preview image
+      preview.style.opacity = file ? '1' : '0.5'; // Set opacity based on file selection
+    }
+    reader.readAsDataURL(file);
+  }
 }
 
 // for edit
 function previewImage1(event) {
-  console.log("previewImage1 function invoked");
   const file1 = event.target.files[0];
   const reader1 = new FileReader();
   const preview1 = document.getElementById('preview-image1');
 
   reader1.onload = function (e) {
     if (file1) {
-      preview1.src = e.target.result;
-      preview1.style.display = 'block'; // Show the preview image
-      preview1.dataset.studentPic = file1.name; // Set data-student-pic attribute
+      if (validateFileType(file1)) {
+        preview1.src = e.target.result;
+        preview1.style.display = 'block'; // Show the preview image
+        preview1.style.opacity = '1'; // Set opacity to 1 for the selected image
+        preview1.dataset.studentPic = file1.name; // Set data-student-pic attribute
+      } else {
+        // If the file doesn't pass validation, show the current image
+        if (currentImage) {
+          preview1.src = currentImage;
+          preview1.style.opacity = '1'; // Set opacity to 1 for the current image
+        } else {
+          // If no current image is available, show the default image
+          preview1.src = "{{ url_for('static', filename='assets/default-picture.jpg') }}";
+          preview1.style.opacity = '0.8'; // Set opacity back to default for the default image
+        }
+      }
     } else {
-      // If no file is selected, set the default image URL
-      preview1.src = "{{ url_for('static', filename='assets/default-picture.jpg') }}";
+      // If no file is selected, show the current image or default image
+      if (currentImage) {
+        preview1.src = currentImage;
+        preview1.style.opacity = '1'; // Set opacity to 1 for the current image
+      } else {
+        preview1.src = "{{ url_for('static', filename='assets/default-picture.jpg') }}";
+        preview1.style.opacity = '0.8'; // Set opacity back to default for the default image
+      }
     }
   };
+
+
+
   reader1.readAsDataURL(file1);
 }
+
 
 </script>
 
